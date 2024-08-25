@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="welcome_msg">Welcome to</string>
+    <string name="user_name">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+
+    <string name="login_failure">Not able to login. Please enter valid credentials</string>
+    <string name="network_issue">Please check your network connection</string>
+    <string name="unauthorized">Not able to authorized please check you are logged in</string>
+    <string name="not_found">File not found</string>
+    <string name="internal_server_error">Internal server error</string>
+    <string name="error">Failed to get response</string>
+</resources>
