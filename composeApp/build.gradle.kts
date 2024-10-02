@@ -29,6 +29,14 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
         }
+
+        iosTarget.compilations {
+            val main by getting {
+                cinterops {
+                    create("StatusBar")
+                }
+            }
+        }
     }
 
     sourceSets {
@@ -37,6 +45,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.android.coroutine)
+            implementation(libs.core.splashscreen)
         }
 
         commonMain.dependencies {
@@ -51,6 +60,8 @@ kotlin {
             implementation(libs.bundles.commonKtor)
             implementation(libs.bundles.navigation)
             implementation(libs.bundles.coil)
+            implementation(libs.bundles.palletes)
+            implementation(libs.lazyPaginationCompose)
             implementation(libs.common.coroutine)
             implementation(libs.koin.compose)
             implementation(libs.datastore.preferences)
@@ -108,5 +119,15 @@ android {
     }
     dependencies {
         debugImplementation(compose.uiTooling)
+    }
+}
+dependencies {
+    implementation(libs.core)
+}
+
+swiftklib {
+    create("StatusBar") {
+        path = file("../iosApp/iosApp/statusBar")
+        packageName("com.compose.starter.statusBar")
     }
 }

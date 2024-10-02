@@ -1,8 +1,8 @@
 package com.compose.starter.networking.model
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.DrawableResource
 
 @Serializable
 data class RequestAndValidateToken(
@@ -20,4 +20,12 @@ data class ValidSession(
     val sessionId: String? = null, // 79191836ddaa0da3df76a5ffef6f07ad6ab0c641
     @SerialName("success")
     val success: Boolean? = null, // true
+)
+
+
+data class TabBarItem(
+    val screen: Any,
+    val title: String,
+    val selectedIcon: DrawableResource,
+    val unselectedIcon: DrawableResource,
 )

@@ -1,17 +1,20 @@
 package com.compose.starter
 
 import androidx.compose.ui.window.ComposeUIViewController
+import com.compose.starter.appInitializations.AppInitialData
+import com.compose.starter.appInitializations.AppInitialLoad
 import com.compose.starter.di.appLevelModules
 import org.koin.compose.KoinApplication
-import org.koin.compose.KoinContext
-import org.koin.dsl.koinApplication
 
 fun MainViewController() = ComposeUIViewController {
-    KoinContext(
-        context = koinApplication {
-            appLevelModules(null, true)
-        }.koin
-    ) {
-        App()
+    var appInitialData: AppInitialData? = null
+    KoinApplication({
+        appLevelModules(null, true)
+    }) {
+        AppInitialLoad.loadData {
+            appInitialData = it
+        }
+
+        App(appInitialData)
     }
 }

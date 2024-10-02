@@ -73,3 +73,22 @@ val surfaceContainerLowDark = Color(0xFF181C20)
 val surfaceContainerDark = Color(0xFF1C2024)
 val surfaceContainerHighDark = Color(0xFF262A2E)
 val surfaceContainerHighestDark = Color(0xFF313539)
+
+
+
+
+val appLogoGradientColor = listOf(
+    Color(0xFF89CDA5),
+    Color(0xFF68C5B6),
+    Color(0xFF52C1BF),
+    Color(0xFF3BBECA),
+    Color(0xFF22BAD5),
+    Color(0xFF02B5E2)
+)
+
+
+val avatarBack = Color(0xFF52C1BF)
+val avatarFront = Color(0xFF68C5B6)
+
+
+val mediaDetailFillColor = Color(0xFFA5F2D3)

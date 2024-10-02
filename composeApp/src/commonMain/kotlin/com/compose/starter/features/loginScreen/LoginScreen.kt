@@ -42,9 +42,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.compose.starter.commonUi.FailureStringBasedOnResponse
-import com.compose.starter.constants.ContentDesc
-import com.compose.starter.constants.Sizing
-import com.compose.starter.constants.Spacing
+import com.compose.starter.constants.ContentDescription
+import com.compose.starter.spacingsAndBorders.sizing
+import com.compose.starter.spacingsAndBorders.spacing
 import com.compose.starter.theme.primaryDark
 import com.compose.starter.theme.primaryLight
 import com.compose.starter.theme.tertiaryDark
@@ -95,7 +95,7 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .padding(Spacing.defaultAllSidePadding),
+                .padding(MaterialTheme.spacing.medium),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -104,18 +104,18 @@ fun LoginScreen(
             }
 
             item {
-                Spacer(modifier = Modifier.height(Spacing.padding_eight))
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
             }
 
             item {
                 Image(
                     painter = painterResource(Res.drawable.tmdb_logo),
-                    contentDescription = ContentDesc.TMDB_LOGO,
+                    contentDescription = ContentDescription.TMDB_LOGO,
                 )
             }
 
             item {
-                Spacer(modifier = Modifier.height(Sizing.twentyFour))
+                Spacer(modifier = Modifier.height(MaterialTheme.sizing.large))
             }
 
             item {
@@ -128,9 +128,9 @@ fun LoginScreen(
                     singleLine = true,
                     trailingIcon = {
                         Icon(
-                            modifier = Modifier.size(Sizing.twentyFour),
+                            modifier = Modifier.size(MaterialTheme.sizing.large),
                             painter = painterResource(Res.drawable.user),
-                            contentDescription = ContentDesc.USERNAME
+                            contentDescription = ContentDescription.USERNAME
                         )
                     },
                     keyboardActions = KeyboardActions(onNext = { passwordFocus.requestFocus() }),
@@ -145,7 +145,7 @@ fun LoginScreen(
             }
 
             item {
-                Spacer(modifier = Modifier.height(Spacing.defaultAllSidePadding))
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
             }
 
             item {
@@ -172,7 +172,7 @@ fun LoginScreen(
                                 shouldShowPassword
                             )
                             Icon(
-                                modifier = Modifier.size(Sizing.twentyFour),
+                                modifier = Modifier.size(MaterialTheme.sizing.large),
                                 painter = painterResource(passIcon),
                                 contentDescription = desc
                             )
@@ -188,7 +188,7 @@ fun LoginScreen(
             }
 
             item {
-                Spacer(modifier = Modifier.height(Spacing.padding_twenty_four))
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.medLarge))
             }
 
             item {
@@ -260,8 +260,8 @@ private fun brush(): Brush {
 @Composable
 fun getIconAndContentDescription(shouldShowPassword: Boolean): Pair<DrawableResource, String> {
     return if (shouldShowPassword) {
-        Pair(Res.drawable.show, ContentDesc.SHOW_PASS)
+        Pair(Res.drawable.show, ContentDescription.SHOW_PASS)
     } else {
-        Pair(Res.drawable.hide, ContentDesc.HIDE_PASS)
+        Pair(Res.drawable.hide, ContentDescription.HIDE_PASS)
     }
 }

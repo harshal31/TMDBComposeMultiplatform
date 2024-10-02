@@ -1,6 +1,6 @@
 package com.compose.starter.networking
 
-import com.compose.starter.appLevelBuildInfo.AppBuildInfo
+import com.compose.starter.appInitializations.AppBuildInfo
 import com.compose.starter.constants.AppConstants
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient

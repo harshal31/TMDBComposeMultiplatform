@@ -1,7 +1,7 @@
 package com.compose.starter.features.loginScreen
 
 import com.compose.starter.localData.LocalStore
-import com.compose.starter.networking.ApiIssue
+import com.compose.starter.networking.ApiState
 import com.compose.starter.networking.Endpoint
 import com.compose.starter.networking.NetworkManager
 import com.compose.starter.networking.Parameter
@@ -11,8 +11,6 @@ import com.compose.starter.networking.parseResponse
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -20,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.io.IOException
 
 class LoginScreenRepository(
     private val network: NetworkManager,
@@ -34,7 +33,6 @@ class LoginScreenRepository(
                     .getOrNull()?.requestToken ?: ""
 
             val validateToken = network.call.post(Endpoint.VALIDATE_TOKEN) {
-                contentType(ContentType.Application.Json)
                 setBody(
                     mapOf(
                         Parameter.USERNAME to userName,
@@ -45,7 +43,7 @@ class LoginScreenRepository(
             }.parseResponse<RequestAndValidateToken>()
 
             if (validateToken.isFailure) {
-                emit(Result.failure(Error(ApiIssue.ERROR)))
+                emit(Result.failure(Error(ApiState.ERROR.value)))
             } else {
                 store.putString(LocalStore.TOKEN_ID, requestToken)
                 val validSession = network.call.post(Endpoint.CREATE_VALID_SESSION) {
@@ -54,16 +52,17 @@ class LoginScreenRepository(
 
                 if (validSession.isSuccess) {
                     store.putString(
-                        LocalStore.SESSION_ID, validSession.getOrNull()?.sessionId ?: ""
+                        LocalStore.SESSION_ID, validSession.getOrNull()?.sessionId
                     )
                 }
                 emit(validSession)
             }
 
-        }
-            .catch { emit(Result.failure(Error("jkbk"))) }
-            .flowOn(dispatcher)
-
-
+        }.catch {
+            when (it) {
+                is IOException -> emit(Result.failure(Error(ApiState.NETWORK_ISSUE.value)))
+                else -> emit(Result.failure(Error(ApiState.ERROR.value)))
+            }
+        }.flowOn(dispatcher)
     }
 }
