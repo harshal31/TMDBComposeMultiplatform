@@ -11,6 +11,8 @@
 .idea
 .DS_Store
 build/
+/.fleet
+.fleet
 /captures
 .externalNativeBuild
 .cxx
