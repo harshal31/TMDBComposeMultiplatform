@@ -1,11 +1,9 @@
-package com.compose.starter.commonUi
+package com.compose.starter.features.movieDetailScreen.movieDetailUiComponents
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +34,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import com.compose.starter.commonUi.CustomCircularProgressBar
+import com.compose.starter.commonUi.DominantColorCoilImage
+import com.compose.starter.commonUi.StarRatingBar
 import com.compose.starter.constants.AppConstants
 import com.compose.starter.constants.ContentDescription
 import com.compose.starter.features.movieDetailScreen.MediaDetailUiEvent
@@ -49,14 +50,15 @@ import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.bookmark_filled
 import composestarter.composeapp.generated.resources.bookmark_unfilled
 import composestarter.composeapp.generated.resources.percent
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.roundToInt
 
 @Composable
-fun DetailImageWithMediaInfo(
+fun MovieDetailInformation(
     mediaDetail: TmdbMediaDetail?,
+    certification: String?,
+    releaseYear: String?,
     rating: Int,
     shouldAddToWatchList: Boolean,
     sessionId: String? = null,
@@ -117,8 +119,8 @@ fun DetailImageWithMediaInfo(
             Spacer(Modifier.height(MaterialTheme.spacing.extraSmall))
             MediaInfoRow(
                 mediaId = mediaDetail?.id.toString(),
-                ratedValue = mediaDetail?.releaseDates?.getRatedValue(),
-                releaseYear = mediaDetail?.getReleaseYear(),
+                ratedValue = certification,
+                releaseYear = releaseYear,
                 shouldAddToWatchList = shouldAddToWatchList,
                 sessionId = sessionId,
                 accountId = accountId,
@@ -202,30 +204,6 @@ fun DetailImageWithMediaInfo(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun MediaDetailTitleWithContent(
-    title: StringResource,
-    content: @Composable ColumnScope.() -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(horizontal = MaterialTheme.spacing.default)
-            .animateContentSize(),
-    ) {
-        Text(
-            stringResource(title),
-            modifier = Modifier.fillMaxWidth().padding(bottom = MaterialTheme.spacing.small),
-            style = MaterialTheme.typography.headlineSmall.copy(
-                fontWeight = FontWeight.Bold
-            ),
-        )
-
-        this.content()
     }
 }
 

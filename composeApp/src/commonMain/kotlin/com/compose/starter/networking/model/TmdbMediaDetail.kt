@@ -79,11 +79,7 @@ data class TmdbMediaDetail(
     val voteAverage: Double? = null, // 6.665
     @SerialName("vote_count")
     val voteCount: Int? = null, // 294
-) {
-    fun getReleaseYear(): String? {
-        return releaseDate?.split("-")?.firstOrNull()
-    }
-}
+)
 
 @Serializable
 data class BelongToCollection(
@@ -187,16 +183,22 @@ data class ReleaseDates(
     val results: List<ReleaseDateList>? = emptyList(),
 ) {
 
-    fun getRatedValue(isoCode: String = DefaultParameter.REGION): String? {
+    fun getReleaseInfo(isoCode: String = DefaultParameter.REGION): Triple<String?, String?, String?> {
         val theatrical = 3
         val physical = 5
         val premiere = 1
-        val certification = results
+        val releaseDate = results
             ?.firstOrNull { it.iso31661 == isoCode }?.releaseDates
             ?.filter { it.certification.isNullOrEmpty().not() }
             ?.firstOrNull { it.type in theatrical..physical || it.type == premiere }
-            ?.certification
-        return if (certification.isNullOrEmpty()) null else certification
+
+        val releaseDateStr =
+            if (releaseDate?.releaseDate.isNullOrEmpty()) null else releaseDate?.releaseDate
+        val certification =
+            if (releaseDate?.certification.isNullOrEmpty()) null else releaseDate?.certification
+        val releaseYear = releaseDateStr?.split("-")?.firstOrNull()
+
+        return Triple(certification, releaseDateStr, releaseYear)
     }
 }
 
@@ -467,11 +469,7 @@ data class Images(
     val logos: List<Logo>? = emptyList(),
     @SerialName("posters")
     val posters: List<ImagePoster>? = emptyList(),
-) {
-    fun shouldFetchImages(): Boolean {
-        return logos?.isNotEmpty() == true && backdrops?.isNotEmpty() == true && posters?.isNotEmpty() == true
-    }
-}
+)
 
 @Serializable
 data class Backdrop(

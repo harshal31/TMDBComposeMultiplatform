@@ -14,6 +14,9 @@ object ContentDescription {
     const val UNAUTHORIZED_ERROR = "unauthorized_error"
     const val INTERNAL_SERVER_ERROR = "internal_Server_error"
     const val GENERAL_ERROR = "general_error"
+    const val INFO = "information"
+    const val BOTTOM_SHEET_POSTER = "bottom_sheet_poster"
+    const val PLAY = "play"
 
 
     private const val ADD_TO_WATCHLIST = "add_to_watchlist"

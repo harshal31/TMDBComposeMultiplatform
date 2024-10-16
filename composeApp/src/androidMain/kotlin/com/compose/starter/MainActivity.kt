@@ -10,7 +10,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.compose.starter.appInitializations.AppInitialData
 import com.compose.starter.appInitializations.AppInitialLoad
 import com.compose.starter.di.appLevelModules
-import org.koin.compose.KoinApplication
+import org.koin.core.context.startKoin
 
 class MainActivity : ComponentActivity() {
 
@@ -32,17 +32,17 @@ class MainActivity : ComponentActivity() {
             !isDataLoaded
         }
 
-        setContent {
-            KoinApplication({
-                appLevelModules(this@MainActivity.applicationContext, true)
-            }) {
-                AppInitialLoad.loadData {
-                    initialData = it
-                    isDataLoaded = true
-                }
+        startKoin {
+            appLevelModules(this@MainActivity.applicationContext, true)
+        }
 
-                App(initialData)
+        setContent {
+            AppInitialLoad.loadData {
+                initialData = it
+                isDataLoaded = true
             }
+
+            App(initialData)
         }
     }
 }

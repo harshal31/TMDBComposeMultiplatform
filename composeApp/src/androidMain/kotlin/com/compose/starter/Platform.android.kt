@@ -1,25 +1,21 @@
 package com.compose.starter
 
 import android.annotation.SuppressLint
-import android.app.Activity
+import android.icu.text.NumberFormat
 import android.os.Build
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import coil3.Bitmap
 import coil3.PlatformContext
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.bitmapConfig
 import coil3.request.crossfade
+import java.util.Locale
 import android.graphics.Bitmap as AndroidBitmap
 
 class AndroidPlatform : Platform {
@@ -27,24 +23,6 @@ class AndroidPlatform : Platform {
 }
 
 actual fun getPlatform(): Platform = AndroidPlatform()
-
-@Composable
-actual fun SetStatusBarColor(color: Color, isDarkTheme: Boolean) {
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window.apply {
-                statusBarColor = color.toArgb()
-                navigationBarColor = color.toArgb()
-            }
-            WindowCompat.getInsetsController(window, view).apply {
-                isAppearanceLightStatusBars = !isDarkTheme
-                isAppearanceLightNavigationBars = !isDarkTheme
-            }
-        }
-    }
-}
-
 
 actual val screenWidth: Dp
     @Composable
@@ -83,4 +61,21 @@ actual fun platformImageRequest(
         .bitmapConfig(AndroidBitmap.Config.ARGB_8888)
         .crossfade(true)
         .build()
+}
+
+actual fun formatCurrency(input: Int?, locale: String): String {
+    val localeObj = Locale.forLanguageTag(locale)
+    val currencyFormatter = NumberFormat.getCurrencyInstance(localeObj)
+
+    return if (input == null || input == 0) {
+        "-"
+    } else {
+        currencyFormatter.format(input)
+    }
+}
+
+actual fun getDisplayLanguage(locale: String?): String {
+    return locale?.let {
+        Locale.forLanguageTag(it).displayLanguage
+    } ?: "-"
 }

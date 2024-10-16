@@ -101,6 +101,7 @@ object Parameter {
 
 
     const val LANGUAGE = "language"
+    const val IMAGES = "images"
     const val PAGE = "page"
     const val REGION = "region"
     const val TIMEZONE = "timezone"

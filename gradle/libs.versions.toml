@@ -15,10 +15,11 @@ compose-plugin = "1.6.11"
 composeRatingbar = "1.2.3"
 kmpalette = "3.1.0"
 junit = "4.13.2"
-kotlin = "2.0.10"
+kotlin = "2.0.20"
+kotlinxDatetime = "0.6.1"
 ktor = "3.0.0-beta-2"
 coroutines = "1.9.0-RC"
-koinMultiplatform = "4.0.0-RC1"
+koinMultiplatform = "4.0.0"
 coilComposeCore = "3.0.0-alpha10"
 dataStore = "1.1.1"
 swiftKLibVersion = "0.6.3"
@@ -45,6 +46,7 @@ compose-view-model = { module = "org.jetbrains.androidx.lifecycle:lifecycle-view
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
@@ -59,6 +61,7 @@ android-coroutine = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koinMultiplatform" }
 multiplatform-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "composeMultiplatformNavigation" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koinMultiplatform" }
+koin-compose-view-model-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koinMultiplatform" }
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coilComposeCore" }
 coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coilComposeCore" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilComposeCore" }
@@ -101,4 +104,10 @@ coil = [
 
 palletes = [
     "kmpalette-core",
+]
+
+koins = [
+    "koin-compose",
+    "koin-compose-view-model-navigation",
+    "koin-compose-viewmodel"
 ]

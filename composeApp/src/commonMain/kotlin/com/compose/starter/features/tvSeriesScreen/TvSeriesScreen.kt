@@ -38,10 +38,10 @@ fun TvSeriesScreen(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    CleanContent(padding, uiState.errorCode) {
+    CleanContent(padding, uiState.errorCode) { paddingValues ->
         LazyColumn(
             Modifier
-                .padding(it)
+                .padding(paddingValues)
                 .padding(MaterialTheme.spacing.default),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.default)
         ) {
@@ -51,7 +51,7 @@ fun TvSeriesScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.on_air,
-                    values = uiState.airingToday,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )
@@ -62,7 +62,7 @@ fun TvSeriesScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.daily_trends,
-                    values = uiState.dailyTrendedTvSeries,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )
@@ -73,7 +73,7 @@ fun TvSeriesScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.weekly_trends,
-                    values = uiState.weeklyTrendingTvSeries,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )
@@ -84,7 +84,7 @@ fun TvSeriesScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.fan_favorites,
-                    values = uiState.popularTvSeries,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )
@@ -95,7 +95,7 @@ fun TvSeriesScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.future_shows,
-                    values = uiState.upcomingTvSeries,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )
@@ -106,7 +106,7 @@ fun TvSeriesScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.free_flicks,
-                    values = uiState.freeToWatchTvSeries,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )

@@ -24,6 +24,9 @@ class MovieDetailScreenModel(
                         movieDetail = detail.movieDetail,
                         sessionId = detail.sessionId,
                         accountId = detail.accountId,
+                        releaseYear = detail.releaseYear,
+                        certification = detail.certification,
+                        overviewPairs = detail.overviewPairs,
                         rating = detail.rating,
                         isFavorite = detail.isFavorite,
                         shouldAddToWatchList = detail.shouldAddToWatchList,
@@ -86,5 +89,9 @@ class MovieDetailScreenModel(
                 }
             }
         }
+    }
+
+    public override fun onCleared() {
+        super.onCleared()
     }
 }

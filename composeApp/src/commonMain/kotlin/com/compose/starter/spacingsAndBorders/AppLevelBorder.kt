@@ -31,6 +31,15 @@ data class RectangularBorder(
     val medium: RoundedCornerShape = RoundedCornerShape(BorderDefaults.MEDIUM.dp),
     val large: RoundedCornerShape = RoundedCornerShape(BorderDefaults.LARGE.dp),
     val extraLarge: RoundedCornerShape = RoundedCornerShape(BorderDefaults.EXTRA_LARGE.dp),
+    val topLevelMedLargeBottomSheetBorder: RoundedCornerShape = RoundedCornerShape(
+        topStart = BorderDefaults.MED_LARGE.dp,
+        topEnd = BorderDefaults.MED_LARGE.dp
+    ),
+    val topLevelMediumBottomSheetBorder: RoundedCornerShape = RoundedCornerShape(
+        topStart = BorderDefaults.MED_LARGE.dp,
+        topEnd = BorderDefaults.MED_LARGE.dp
+    ),
+
 )
 
 

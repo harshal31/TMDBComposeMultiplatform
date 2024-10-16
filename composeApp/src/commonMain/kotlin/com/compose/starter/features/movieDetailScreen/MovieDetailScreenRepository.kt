@@ -63,9 +63,9 @@ class MovieDetailScreenRepository(
     ): Flow<Result<Images>> {
         return flow {
             emit(
-                network.call.get(Endpoint.IMAGES) {
+                network.call.get(Endpoint.MOVIE_DETAIL) {
                     url {
-                        appendPathSegments(movieId)
+                        appendPathSegments(movieId, Parameter.IMAGES)
                         parameters.append(Parameter.LANGUAGE, language)
                     }
                 }.parseResponse<Images>()

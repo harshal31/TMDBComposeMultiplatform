@@ -29,6 +29,7 @@ fun CoilImage(
     contentDesc: String = "",
     scale: ContentScale = ContentScale.Fit,
     placeHolder: Painter? = painterResource(Res.drawable.image_loader_placeholder),
+    errorPlaceholder: Painter? = painterResource(Res.drawable.image_error_placeholder)
 ) {
     AsyncImage(
         modifier = modifier,
@@ -36,15 +37,11 @@ fun CoilImage(
             .Builder(LocalPlatformContext.current)
             .data(url)
             .diskCachePolicy(CachePolicy.ENABLED)
-
             .crossfade(true)
             .build(),
-        onSuccess = { suc ->
-            suc.result.image.toBitmap()
-        },
         contentDescription = contentDesc,
         placeholder = placeHolder,
-        error = painterResource(Res.drawable.image_error_placeholder),
+        error = errorPlaceholder,
         contentScale = scale,
     )
 }
@@ -80,7 +77,7 @@ fun TmdbCropSizeImage(
     modifier: Modifier = Modifier,
     url: String,
     contentScale: ContentScale = ContentScale.Fit,
-    contentName: String = "",
+    contentDescription: String = "",
     placeHolder: Painter? = painterResource(Res.drawable.image_loader_placeholder),
 ) {
     AsyncImage(
@@ -91,7 +88,7 @@ fun TmdbCropSizeImage(
             .diskCachePolicy(CachePolicy.ENABLED)
             .crossfade(true)
             .build(),
-        contentDescription = ContentDescription.contentImage(contentName),
+        contentDescription = ContentDescription.contentImage(contentDescription),
         placeholder = placeHolder,
         error = painterResource(Res.drawable.image_error_placeholder),
         contentScale = contentScale,
@@ -104,7 +101,7 @@ fun TmdbFullSizeImage(
     modifier: Modifier = Modifier,
     url: String,
     contentScale: ContentScale = ContentScale.Fit,
-    contentName: String = "",
+    contentDescription: String = "",
     placeHolder: Painter? = painterResource(Res.drawable.image_loader_placeholder),
 ) {
     AsyncImage(
@@ -115,7 +112,7 @@ fun TmdbFullSizeImage(
             .diskCachePolicy(CachePolicy.ENABLED)
             .crossfade(true)
             .build(),
-        contentDescription = ContentDescription.contentImage(contentName),
+        contentDescription = ContentDescription.contentImage(contentDescription),
         placeholder = placeHolder,
         error = painterResource(Res.drawable.image_error_placeholder),
         contentScale = contentScale,

@@ -6,8 +6,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Icon
@@ -21,12 +24,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import com.compose.starter.spacingsAndBorders.circleBorder
+import com.compose.starter.spacingsAndBorders.rectBorder
 import com.compose.starter.spacingsAndBorders.sizing
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.less
@@ -36,14 +43,27 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 
-fun LazyListScope.listItemVisibility(
+fun LazyListScope.itemVisibility(
     key: Any? = null,
-    value: List<Any> = emptyList(),
+    value: Any? = null,
     content: @Composable () -> Unit,
 ) {
-    if (value.isNotEmpty()) {
-        item(key) {
-            content()
+    if (value != null) {
+        item(key = key) {
+            content
+        }
+    }
+}
+
+
+fun <T> LazyListScope.listItemVisibility(
+    key: Any? = null,
+    value: List<T>? = emptyList(),
+    content: @Composable (List<T>) -> Unit,
+) {
+    if (value!!.isNotEmpty()) {
+        item(key = key) {
+            content(value)
         }
     }
 }
@@ -55,7 +75,7 @@ fun LazyListScope.stringItemVisibility(
     content: @Composable (String) -> Unit,
 ) {
     if (value.isNullOrEmpty().not()) {
-        item(key) {
+        item(key = key) {
             content(value ?: "")
         }
     }
@@ -85,7 +105,7 @@ fun CircleIcon(
             .size(MaterialTheme.sizing.giant)
             .background(
                 Color.Black.copy(
-                    alpha = 0.7f
+                    alpha = 0.5f
                 ),
                 shape = MaterialTheme.circleBorder.extraLarge
             ),
@@ -172,5 +192,69 @@ fun ExpandableText(
                 }
             }
         )
+    }
+}
+
+
+@Composable
+fun TmdbDivider(
+    modifier: Modifier,
+    isVertical: Boolean,
+    thickness: Dp = MaterialTheme.sizing.nano,
+    color: Color = MaterialTheme.colorScheme.outlineVariant,
+) {
+
+    Box(
+        modifier = modifier
+            .then(
+                if (isVertical) {
+                    Modifier.fillMaxHeight().width(thickness)
+                } else {
+                    Modifier.fillMaxWidth().height(thickness)
+                }
+            )
+            .clip(MaterialTheme.rectBorder.medLarge)
+            .background(color)
+    )
+}
+
+@Composable
+fun TmdbIcon(
+    icon: Any,
+    modifier: Modifier = Modifier,
+    size: Dp = MaterialTheme.sizing.large,
+    tint: Color = MaterialTheme.colorScheme.primary,
+    contentDesc: String = "",
+    onIconClick: () -> Unit,
+) {
+
+    when (icon) {
+        is ImageVector -> {
+            IconButton(
+                onClick = onIconClick,
+                modifier = Modifier.then(modifier)
+            ) {
+                Icon(
+                    imageVector = icon,
+                    modifier = Modifier.size(MaterialTheme.sizing.large),
+                    contentDescription = contentDesc,
+                    tint = tint
+                )
+            }
+        }
+
+        is DrawableResource -> {
+            IconButton(
+                onClick = onIconClick,
+                modifier = Modifier.then(modifier)
+            ) {
+                Icon(
+                    painter = painterResource(icon),
+                    modifier = Modifier.size(size),
+                    contentDescription = contentDesc,
+                    tint = tint
+                )
+            }
+        }
     }
 }

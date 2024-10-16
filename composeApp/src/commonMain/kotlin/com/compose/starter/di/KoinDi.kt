@@ -30,10 +30,10 @@ import okio.FileSystem
 import org.koin.core.KoinApplication
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
-import org.koin.mp.KoinPlatform
+import org.koin.mp.KoinPlatformTools
 
 
-private fun appLevelBuildInfo(
+fun appLevelBuildInfo(
     isLogEnabled: Boolean,
 ) = module {
     single<AppBuildInfo> {
@@ -46,6 +46,7 @@ private fun appLevelBuildInfo(
 private val repoConstructorParamModules = module {
     single<NetworkManager> { NetworkManager(get(), get()) }
     single<LocalStore> { LocalStore(get()) }
+    single<ShareMediaData> { ShareMediaData() }
 }
 
 private val repoModules = module {
@@ -91,7 +92,7 @@ val appModules = listOf(
 )
 
 
-inline fun <reified T : Any> getKoinValue() = KoinPlatform.getKoin().get<T>()
+inline fun <reified T : Any> getKoinValue() = KoinPlatformTools.defaultContext().get().get<T>()
 
 
 fun imageLoader(context: PlatformContext, shouldEnableLogs: Boolean = true): ImageLoader {

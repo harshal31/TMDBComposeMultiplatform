@@ -20,6 +20,19 @@ private data object SizingDefaults {
     const val LARGE_TILE_HEIGHT = 225
     const val LARGE_IMAGE_SIZE = 130
     const val MEDIUM_IMAGE_SIZE = 110
+    const val FIFTY_FIVE = 55
+    const val TWO_HUNDRED = 200
+    const val THREE_HUNDRED = 300
+    const val TWO_FIFTY = 250
+    const val TWO_SIXTY = 260
+    const val TWO_SEVENTY = 270
+    const val TWO_EIGHTY = 280
+    const val SIXTY = 60
+    const val EIGHTY = 80
+    const val HUNDRED = 100
+    const val ONE_EIGHTY = 180
+    const val ONE_SEVENTY = 170
+    const val ONE_SIXTY = 160
 }
 
 data class Sizing(
@@ -35,6 +48,19 @@ data class Sizing(
     val largeTileHeight: Dp = SizingDefaults.LARGE_TILE_HEIGHT.dp,
     val largeImageSize: Dp = SizingDefaults.LARGE_IMAGE_SIZE.dp,
     val mediumImageSize: Dp = SizingDefaults.MEDIUM_IMAGE_SIZE.dp,
+    val fiftyFive: Dp = SizingDefaults.FIFTY_FIVE.dp,
+    val hundred: Dp = SizingDefaults.HUNDRED.dp,
+    val twoHundred: Dp = SizingDefaults.TWO_HUNDRED.dp,
+    val threeHundred: Dp = SizingDefaults.THREE_HUNDRED.dp,
+    val twoFifty: Dp = SizingDefaults.TWO_FIFTY.dp,
+    val twoSixty: Dp = SizingDefaults.TWO_SIXTY.dp,
+    val twoSeventy: Dp = SizingDefaults.TWO_SEVENTY.dp,
+    val twoEighty: Dp = SizingDefaults.TWO_EIGHTY.dp,
+    val oneEighty: Dp = SizingDefaults.ONE_EIGHTY.dp,
+    val oneSeventy: Dp = SizingDefaults.ONE_SEVENTY.dp,
+    val oneSixty: Dp = SizingDefaults.ONE_SIXTY.dp,
+    val sixty: Dp = SizingDefaults.SIXTY.dp,
+    val eighty: Dp = SizingDefaults.EIGHTY.dp,
 )
 
 val LocalSizing = compositionLocalOf { Sizing() }

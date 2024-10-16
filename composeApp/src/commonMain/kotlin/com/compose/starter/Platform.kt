@@ -1,7 +1,6 @@
 package com.compose.starter
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.Dp
 import coil3.Bitmap
@@ -15,9 +14,6 @@ interface Platform {
 expect fun getPlatform(): Platform
 
 
-@Composable
-expect fun SetStatusBarColor(color: Color, isDarkTheme: Boolean)
-
 @get:Composable
 expect val screenWidth: Dp
 
@@ -27,3 +23,7 @@ expect val screenHeight: Dp
 expect fun Bitmap.toImageBitmap(): ImageBitmap
 
 expect fun platformImageRequest(context: PlatformContext, url: String): ImageRequest
+
+expect fun formatCurrency(input: Int?, locale: String): String
+
+expect fun getDisplayLanguage(locale: String?): String

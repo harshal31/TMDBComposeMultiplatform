@@ -61,13 +61,13 @@ kotlin {
             implementation(libs.bundles.navigation)
             implementation(libs.bundles.coil)
             implementation(libs.bundles.palletes)
+            implementation(libs.bundles.koins)
             implementation(libs.lazyPaginationCompose)
             implementation(libs.common.coroutine)
-            implementation(libs.koin.compose)
             implementation(libs.datastore.preferences)
             implementation(libs.napier.log)
             implementation(libs.compose.view.model)
-            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.kotlinx.datetime)
         }
 
         iosMain.dependencies {

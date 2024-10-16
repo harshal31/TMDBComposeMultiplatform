@@ -39,10 +39,10 @@ fun PeopleScreen(
     CleanContent(
         padding,
         uiState.apiState
-    ) {
+    ) { paddingValues ->
         LazyColumn(
             Modifier
-                .padding(it)
+                .padding(paddingValues)
                 .padding(MaterialTheme.spacing.default),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.default)
         ) {
@@ -52,7 +52,7 @@ fun PeopleScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.daily_trends,
-                    values = uiState.dailyTrendedPeople,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )
@@ -64,7 +64,7 @@ fun PeopleScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.weekly_trends,
-                    values = uiState.weeklyTrendingPeople,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )
@@ -76,7 +76,7 @@ fun PeopleScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.fan_favorites,
-                    values = uiState.popularPeople,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )

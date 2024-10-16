@@ -49,7 +49,7 @@ fun TmdbHeaderTitleWithLazyRow(
         ) {
             Text(
                 stringResource(headerTitle),
-                style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold)
+                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold)
             )
 
             IconButton(

@@ -23,12 +23,6 @@ object Screen {
     @Serializable
     data object Settings
 
-    @Serializable
-    data class MovieDetailScreen(
-        val id: String,
-    )
-
-
 
     object Graphs {
         @Serializable

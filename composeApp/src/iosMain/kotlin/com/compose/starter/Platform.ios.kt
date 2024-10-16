@@ -2,7 +2,6 @@ package com.compose.starter
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asComposeImageBitmap
 import androidx.compose.ui.platform.LocalDensity
@@ -13,8 +12,13 @@ import coil3.PlatformContext
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.compose.starter.statusBar.StatusBar
-import kotlinx.cinterop.ExperimentalForeignApi
+import platform.Foundation.NSLocale
+import platform.Foundation.NSNumber
+import platform.Foundation.NSNumberFormatter
+import platform.Foundation.NSNumberFormatterCurrencyStyle
+import platform.Foundation.currentLocale
+import platform.Foundation.languageCode
+import platform.Foundation.localizedStringForLanguageCode
 import platform.UIKit.UIDevice
 
 class IOSPlatform : Platform {
@@ -23,17 +27,6 @@ class IOSPlatform : Platform {
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()
-
-@OptIn(ExperimentalForeignApi::class)
-@Composable
-actual fun SetStatusBarColor(color: Color, isDarkTheme: Boolean) {
-    StatusBar.setStatusBarColorWithRed(
-        color.red.toDouble(),
-        color.green.toDouble(),
-        color.blue.toDouble(),
-        color.alpha.toDouble(),
-    )
-}
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -72,4 +65,24 @@ actual fun platformImageRequest(
         .diskCachePolicy(CachePolicy.ENABLED)
         .crossfade(true)
         .build()
+}
+
+actual fun formatCurrency(input: Int?, locale: String): String {
+    val formatter = NSNumberFormatter()
+    formatter.numberStyle = NSNumberFormatterCurrencyStyle
+    val nsLocale = NSLocale(localeIdentifier = locale)
+    formatter.locale = nsLocale
+    return if (input == null || input == 0) {
+        "-"
+    } else {
+        formatter.stringFromNumber(NSNumber(input)) ?: "-"
+    }
+}
+
+actual fun getDisplayLanguage(locale: String?): String {
+    return locale?.let {
+        val nsLocale = NSLocale(localeIdentifier = locale)
+        val languageCode = nsLocale.languageCode
+        NSLocale.currentLocale().localizedStringForLanguageCode(languageCode) ?: languageCode
+    } ?: "-"
 }

@@ -44,10 +44,10 @@ fun MoviesScreen(
         Napier.d("Recomposing the compose")
     }
 
-    CleanContent(padding, uiState.errorCode) {
+    CleanContent(padding, uiState.errorCode) { paddingValues ->
         LazyColumn(
             Modifier
-                .padding(it)
+                .padding(paddingValues)
                 .padding(MaterialTheme.spacing.default),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.default)
         ) {
@@ -57,7 +57,7 @@ fun MoviesScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.theatre_thrills,
-                    values = uiState.nowInTheatres,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )
@@ -68,7 +68,7 @@ fun MoviesScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.daily_trends,
-                    values = uiState.dailyTrendedMovies,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )
@@ -79,7 +79,7 @@ fun MoviesScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.weekly_trends,
-                    values = uiState.weeklyTrendingMovies,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )
@@ -90,7 +90,7 @@ fun MoviesScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.fan_favorites,
-                    values = uiState.popularMovies,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )
@@ -101,7 +101,7 @@ fun MoviesScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.future_flicks,
-                    values = uiState.upcomingMovies,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )
@@ -112,7 +112,7 @@ fun MoviesScreen(
             ) {
                 TmdbHeaderTitleWithLazyRow(
                     headerTitle = Res.string.free_flicks,
-                    values = uiState.freeToWatchMovies,
+                    values = it,
                     goToMoreScreen = goToMoreScreen,
                     onItemClick = onItemClick
                 )
