@@ -1,10 +1,10 @@
 package com.compose.starter.features.tvSeriesScreen
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 import com.compose.starter.networking.ApiState
 import com.compose.starter.networking.model.TmdbMediaData
 
-@Stable
+@Immutable
 data class TvSeriesScreenUiState(
     val errorCode: ApiState = ApiState.CIRCULAR_LOADING,
     val dailyTrendedTvSeries: List<TmdbMediaData> = emptyList(),

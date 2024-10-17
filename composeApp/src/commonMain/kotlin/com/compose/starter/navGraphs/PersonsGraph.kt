@@ -4,16 +4,16 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.compose.starter.features.tvSeriesScreen.TvSeriesScreen
-import com.compose.starter.features.tvSeriesScreen.TvSeriesScreenViewModel
+import com.compose.starter.features.peopleScreen.PeopleScreenViewModel
+import com.compose.starter.features.peopleScreen.PersonScreen
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 
-fun NavGraphBuilder.tvSeriesGraph(navController: NavController) {
-    navigation<Tv.Graph>(startDestination = Tv.TvSeries) {
-        composable<Tv.TvSeries> {
-            val viewModel = koinViewModel<TvSeriesScreenViewModel>()
-            TvSeriesScreen(
+fun NavGraphBuilder.personsGraph(navController: NavController) {
+    navigation<Person.Graph>(startDestination = Person.Persons) {
+        composable<Person.Persons> {
+            val viewModel = koinViewModel<PeopleScreenViewModel>()
+            PersonScreen(
                 viewModel = viewModel,
                 goToMoreScreen = {},
                 onItemClick = {}
@@ -22,11 +22,11 @@ fun NavGraphBuilder.tvSeriesGraph(navController: NavController) {
     }
 }
 
-
 @Serializable
-sealed interface Tv {
+sealed interface Person {
     @Serializable
-    data object Graph: Tv
+    data object Graph: Person
     @Serializable
-    data object TvSeries: Tv
+    data object Persons: Person
 }
+

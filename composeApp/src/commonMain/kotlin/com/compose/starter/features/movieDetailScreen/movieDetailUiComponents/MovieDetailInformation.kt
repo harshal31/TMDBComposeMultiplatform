@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,14 +35,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import com.compose.starter.commonUi.CustomCircularProgressBar
 import com.compose.starter.commonUi.DominantColorCoilImage
 import com.compose.starter.commonUi.StarRatingBar
 import com.compose.starter.constants.AppConstants
 import com.compose.starter.constants.ContentDescription
 import com.compose.starter.features.movieDetailScreen.MediaDetailUiEvent
 import com.compose.starter.networking.Parameter
-import com.compose.starter.networking.model.TmdbMediaDetail
+import com.compose.starter.networking.model.MappedMovieDetail
 import com.compose.starter.screenHeight
 import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
@@ -56,7 +56,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun MovieDetailInformation(
-    mediaDetail: TmdbMediaDetail?,
+    mediaDetail: MappedMovieDetail?,
     certification: String?,
     releaseYear: String?,
     rating: Int,
@@ -131,7 +131,7 @@ fun MovieDetailInformation(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 mediaDetail?.genres?.let {
-                    items(it) { genre ->
+                    items(it, key = { v -> v.id ?: 0 }) { genre ->
                         genre.name?.let {
                             SuggestionChip(
                                 modifier = Modifier
@@ -165,10 +165,15 @@ fun MovieDetailInformation(
                         modifier = Modifier.wrapContentSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        CustomCircularProgressBar(
-                            shouldAnimate = true,
-                            progressValue = it.toFloat() * 0.1f,
-                            progressArcColor = mediaDetailFillColor
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(MaterialTheme.sizing.massive),
+                            progress = {
+                                it.toFloat() * 0.1f
+                            },
+                            strokeWidth = MaterialTheme.sizing.medium,
+                            color = mediaDetailFillColor,
+                            trackColor = MaterialTheme.colorScheme.outline
+
                         )
                         Text(
                             stringResource(Res.string.percent, (it * 10).roundToInt()),

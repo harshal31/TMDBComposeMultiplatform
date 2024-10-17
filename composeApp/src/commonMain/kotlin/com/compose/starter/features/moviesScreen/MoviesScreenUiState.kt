@@ -1,10 +1,10 @@
 package com.compose.starter.features.moviesScreen
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 import com.compose.starter.networking.ApiState
 import com.compose.starter.networking.model.TmdbMediaData
 
-@Stable
+@Immutable
 data class MoviesScreenUiState(
     val errorCode: ApiState = ApiState.CIRCULAR_LOADING,
     val dailyTrendedMovies: List<TmdbMediaData> = emptyList(),

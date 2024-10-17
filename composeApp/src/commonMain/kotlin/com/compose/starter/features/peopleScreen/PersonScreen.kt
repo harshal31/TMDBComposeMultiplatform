@@ -1,4 +1,4 @@
-package com.compose.starter.features.tvSeriesScreen
+package com.compose.starter.features.peopleScreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,47 +18,32 @@ import com.compose.starter.spacingsAndBorders.spacing
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.daily_trends
 import composestarter.composeapp.generated.resources.fan_favorites
-import composestarter.composeapp.generated.resources.free_flicks
-import composestarter.composeapp.generated.resources.future_shows
-import composestarter.composeapp.generated.resources.on_air
 import composestarter.composeapp.generated.resources.weekly_trends
 
 @Composable
-fun TvSeriesScreen(
-    viewModel: TvSeriesScreenViewModel,
+fun PersonScreen(
+    viewModel: PeopleScreenViewModel,
     goToMoreScreen: (String) -> Unit,
     onItemClick: (String) -> Unit,
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.fetchTvSeriesScreenData()
-    }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.fetchPeopleList()
+    }
+
     Scaffold {
-        CleanContent(PaddingValues(), uiState.errorCode) { paddingValues ->
+        CleanContent(
+            PaddingValues(),
+            uiState.apiState
+        ) { paddingValues ->
             LazyColumn(
                 Modifier
                     .padding(paddingValues)
                     .padding(MaterialTheme.spacing.default),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.default)
             ) {
-
-                item {
-                    HeaderTitle(
-                        headerTitle = Res.string.on_air
-                    ) {
-
-                    }
-                }
-
-                item {
-                    HeaderListValue(
-                        values = uiState.airingToday,
-                        onItemClick = onItemClick
-                    )
-                }
-
 
                 item {
                     HeaderTitle(
@@ -70,11 +55,10 @@ fun TvSeriesScreen(
 
                 item {
                     HeaderListValue(
-                        values = uiState.dailyTrendedTvSeries,
+                        values = uiState.dailyTrendedPeople,
                         onItemClick = onItemClick
                     )
                 }
-
 
                 item {
                     HeaderTitle(
@@ -86,11 +70,10 @@ fun TvSeriesScreen(
 
                 item {
                     HeaderListValue(
-                        values = uiState.weeklyTrendingTvSeries,
+                        values = uiState.weeklyTrendingPeople,
                         onItemClick = onItemClick
                     )
                 }
-
 
                 item {
                     HeaderTitle(
@@ -102,39 +85,7 @@ fun TvSeriesScreen(
 
                 item {
                     HeaderListValue(
-                        values = uiState.popularTvSeries,
-                        onItemClick = onItemClick
-                    )
-                }
-
-
-                item {
-                    HeaderTitle(
-                        headerTitle = Res.string.future_shows
-                    ) {
-
-                    }
-                }
-
-                item {
-                    HeaderListValue(
-                        values = uiState.upcomingTvSeries,
-                        onItemClick = onItemClick
-                    )
-                }
-
-
-                item {
-                    HeaderTitle(
-                        headerTitle = Res.string.free_flicks
-                    ) {
-
-                    }
-                }
-
-                item {
-                    HeaderListValue(
-                        values = uiState.freeToWatchTvSeries,
+                        values = uiState.popularPeople,
                         onItemClick = onItemClick
                     )
                 }

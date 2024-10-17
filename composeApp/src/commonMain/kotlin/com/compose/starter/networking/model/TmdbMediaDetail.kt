@@ -1,6 +1,8 @@
 package com.compose.starter.networking.model
 
+import androidx.compose.runtime.Immutable
 import com.compose.starter.networking.DefaultParameter
+import com.compose.starter.utilities.formatDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -79,7 +81,29 @@ data class TmdbMediaDetail(
     val voteAverage: Double? = null, // 6.665
     @SerialName("vote_count")
     val voteCount: Int? = null, // 294
-)
+) {
+
+    fun mapToMappedMovieDetail(): MappedMovieDetail {
+        return MappedMovieDetail(
+            title = title ?: "-",
+            overview = overview ?: "",
+            backdropPath = backdropPath ?: "-",
+            posterPath = posterPath ?: "",
+            genres = genres ?: emptyList(),
+            id = id,
+            voteAverage = voteAverage ?: 0.0,
+            casts = credits?.cast?.map { it.mapToMappedCast() } ?: emptyList(),
+            recommendations = recommendations?.results?.map { it.mapToMappedRecommended() }
+                ?: emptyList(),
+            similarList = similar?.results?.map { it.mapToMappedSimilar() } ?: emptyList(),
+            videos = videos?.results?.map { it.mapToMappedVideo() } ?: emptyList(),
+            images = images?.posters?.map { it.mapToMappedImages() } ?: emptyList(),
+            backdrops = images?.backdrops?.map { it.mapToMappedBackdrops() } ?: emptyList(),
+            reviews = reviews?.results?.map { it.mapToMappedReview() } ?: emptyList(),
+            keywords = keywords?.keywords?.map { it.mapToMappedKeyword() } ?: emptyList(),
+        )
+    }
+}
 
 @Serializable
 data class BelongToCollection(
@@ -130,6 +154,8 @@ data class ExternalIds(
     val wikidataId: String? = null, // Q113012523
 )
 
+
+@Immutable
 @Serializable
 data class Genre(
     @SerialName("id")
@@ -278,7 +304,16 @@ data class Cast(
     val popularity: Double? = null, // 39.337
     @SerialName("profile_path")
     val profilePath: String? = null, // /1MhRVn6xlShHhftRdK24HuO3TNR.jpg
-)
+) {
+    fun mapToMappedCast(): MappedCast {
+        return MappedCast(
+            id = this.id,
+            name = this.name ?: "-",
+            profilePath = this.profilePath ?: "-",
+            character = this.character ?: "-"
+        )
+    }
+}
 
 @Serializable
 data class Crew(
@@ -304,7 +339,16 @@ data class Crew(
     val popularity: Double? = null, // 2.901
     @SerialName("profile_path")
     val profilePath: String? = null, // /v40byHjEBXfuBj2OuqvM5YGPF6E.jpg
-)
+) {
+    fun mapToMappedCrew(): MappedCrew {
+        return MappedCrew(
+            id = this.id,
+            name = this.name ?: "-",
+            profilePath = this.profilePath ?: "-",
+            job = this.job ?: "-"
+        )
+    }
+}
 
 @Serializable
 data class Keyword(
@@ -312,7 +356,14 @@ data class Keyword(
     val id: Int? = null, // 570
     @SerialName("name")
     val name: String? = null, // rape
-)
+) {
+    fun mapToMappedKeyword(): MappedKeyword {
+        return MappedKeyword(
+            id = id,
+            name = name ?: "-"
+        )
+    }
+}
 
 @Serializable
 data class RecommendationList(
@@ -346,7 +397,14 @@ data class RecommendationList(
     val voteAverage: Double? = null, // 7.8
     @SerialName("vote_count")
     val voteCount: Int? = null, // 20
-)
+) {
+    fun mapToMappedRecommended(): MappedRecommended {
+        return MappedRecommended(
+            id = id,
+            posterPath = posterPath ?: ""
+        )
+    }
+}
 
 @Serializable
 data class ReleaseDateList(
@@ -388,7 +446,19 @@ data class ReviewResult(
     val updatedAt: String? = null, // 2024-08-24T13:10:44.284Z
     @SerialName("url")
     val url: String? = null, // https://www.themoviedb.org/review/66c9dbd435f89cb980eab341
-)
+) {
+    fun mapToMappedReview(): MappedReview {
+        return MappedReview(
+            id = id,
+            authorName = authorDetails?.name,
+            authorUsername = authorDetails?.username ?: "-",
+            avatarPath = authorDetails?.avatarPath ?: "-",
+            content = content ?: "-",
+            createdAt = createdAt.formatDate() ?: "-",
+            reviewUrl = url ?: "-"
+        )
+    }
+}
 
 @Serializable
 data class AuthorDetails(
@@ -432,7 +502,14 @@ data class SimilarResult(
     val voteAverage: Double? = null, // 8.215
     @SerialName("vote_count")
     val voteCount: Int? = null, // 17253
-)
+) {
+    fun mapToMappedSimilar(): MappedSimilar {
+        return MappedSimilar(
+            id = id,
+            posterPath = posterPath ?: ""
+        )
+    }
+}
 
 @Serializable
 data class ResultVideos(
@@ -456,7 +533,15 @@ data class ResultVideos(
     val size: Int? = null, // 1080
     @SerialName("type")
     val type: String? = null, // Featurette
-)
+) {
+    fun mapToMappedVideo(): MappedVideo {
+        return MappedVideo(
+            key = key ?: "-",
+            name = name ?: "-",
+            publishedAt = publishedAt.formatDate()
+        )
+    }
+}
 
 
 @Serializable
@@ -487,7 +572,11 @@ data class Backdrop(
     val voteCount: Int? = null, // 20
     @SerialName("width")
     val width: Int? = null, // 1422
-)
+) {
+    fun mapToMappedBackdrops(): MappedBackdrops {
+        return MappedBackdrops(filePath = filePath ?: "-")
+    }
+}
 
 @Serializable
 data class Logo(
@@ -523,7 +612,11 @@ data class ImagePoster(
     val voteCount: Int? = null, // 6
     @SerialName("width")
     val width: Int? = null, // 600
-)
+) {
+    fun mapToMappedImages(): MappedImagePoster {
+        return MappedImagePoster(filePath = filePath ?: "-")
+    }
+}
 
 
 @Serializable
@@ -550,4 +643,96 @@ data class AccountState(
 data class Rated(
     @SerialName("value")
     val value: Double? = null,
+)
+
+@Immutable
+@Serializable
+data class MappedCast(
+    val id: Int? = null,
+    val name: String = "",
+    val profilePath: String = "",
+    val character: String = "",
+)
+
+
+@Immutable
+@Serializable
+data class MappedCrew(
+    val id: Int? = null,
+    val name: String = "",
+    val profilePath: String = "",
+    val job: String = "",
+)
+
+@Immutable
+@Serializable
+data class MappedMovieDetail(
+    val title: String = "",
+    val overview: String = "",
+    val backdropPath: String = "",
+    val posterPath: String = "",
+    val genres: List<Genre> = emptyList(),
+    val id: Int? = null,
+    val voteAverage: Double = 0.0,
+    val casts: List<MappedCast> = emptyList(),
+    val recommendations: List<MappedRecommended> = emptyList(),
+    val similarList: List<MappedSimilar> = emptyList(),
+    val videos: List<MappedVideo> = emptyList(),
+    val images: List<MappedImagePoster> = emptyList(),
+    val backdrops: List<MappedBackdrops> = emptyList(),
+    val reviews: List<MappedReview> = emptyList(),
+    val keywords: List<MappedKeyword> = emptyList(),
+)
+
+@Immutable
+@Serializable
+data class MappedVideo(
+    val key: String,
+    val name: String,
+    val publishedAt: String,
+)
+
+@Immutable
+@Serializable
+data class MappedImagePoster(
+    val filePath: String,
+)
+
+@Immutable
+@Serializable
+data class MappedBackdrops(
+    val filePath: String,
+)
+
+@Immutable
+@Serializable
+data class MappedReview(
+    val id: String? = null,
+    val authorName: String? = null,
+    val authorUsername: String = "",
+    val avatarPath: String = "",
+    val content: String = "",
+    val createdAt: String = "",
+    val reviewUrl: String = "",
+)
+
+@Immutable
+@Serializable
+data class MappedRecommended(
+    val id: Int? = null,
+    val posterPath: String = "",
+)
+
+@Immutable
+@Serializable
+data class MappedSimilar(
+    val id: Int? = null,
+    val posterPath: String = "",
+)
+
+@Immutable
+@Serializable
+data class MappedKeyword(
+    val id: Int? = null,
+    val name: String = "",
 )

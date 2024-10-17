@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.unit.Dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.compose.starter.spacingsAndBorders.sizing
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -46,6 +47,7 @@ fun CustomCircularProgressBar(
 ) {
     val progress = if (progressValue.isNaN()) 0f else progressValue
     val currentProgress = remember { mutableFloatStateOf(0f) }
+    val pro by progressFlow(progress).collectAsStateWithLifecycle(initialValue = progress)
 
     val animatedProgress by animateFloatAsState(
         targetValue = currentProgress.floatValue,
@@ -56,16 +58,14 @@ fun CustomCircularProgressBar(
         ) tween(animationDuration) else tween(0),
         label = "Progress Animation"
     )
-    LaunchedEffect(shouldAnimate, progress) {
+    LaunchedEffect(shouldAnimate, pro) {
         if (shouldEnableAnimation(shouldAnimate, progress)) {
-            progressFlow(progress).collect { value ->
-                currentProgress.floatValue = value
-            }
+            currentProgress.floatValue = pro
         } else {
             currentProgress.floatValue = progress
         }
     }
-
+    
     Canvas(
         modifier = Modifier.size(size)
     ) {

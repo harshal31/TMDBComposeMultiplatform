@@ -1,29 +1,28 @@
 package com.compose.starter.navGraphs
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.compose.starter.features.homeScreen.HomeScreenEvent
 import com.compose.starter.features.settingsScreen.SettingsScreen
 import com.compose.starter.features.settingsScreen.SettingsScreenViewModel
-import com.compose.starter.routes.Screen.Graphs.SettingsGraph
-import com.compose.starter.routes.Screen.Settings
+import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 
 
-fun NavGraphBuilder.settingsGraph(
-    paddingValues: PaddingValues,
-    onEvent: (HomeScreenEvent) -> Unit,
-) {
-    navigation<SettingsGraph>(startDestination = Settings) {
-        composable<Settings> {
+fun NavGraphBuilder.settingsGraph() {
+    navigation<Setting.Graph>(startDestination = Setting.Settings) {
+        composable<Setting.Settings> {
             val viewModel = koinViewModel<SettingsScreenViewModel>()
-            SettingsScreen(
-                padding = paddingValues,
-                onEvent = onEvent,
-                viewModel = viewModel
-            )
+            SettingsScreen(viewModel = viewModel)
         }
     }
+}
+
+@Serializable
+sealed interface Setting {
+    @Serializable
+    data object Graph: Setting
+    @Serializable
+    data object Settings: Setting
+
 }

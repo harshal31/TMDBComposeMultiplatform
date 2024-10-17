@@ -1,8 +1,6 @@
 package com.compose.starter.features.settingsScreen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,32 +14,20 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.compose.starter.commonUi.AvatarElseInitialLetter
 import com.compose.starter.commonUi.CleanContent
-import com.compose.starter.commonUi.CoilImage
 import com.compose.starter.commonUi.getCountryInfoByCode
 import com.compose.starter.commonUi.pairItemVisibility
 import com.compose.starter.commonUi.stringItemVisibility
-import com.compose.starter.constants.AppConstants
-import com.compose.starter.constants.ContentDescription
-import com.compose.starter.features.homeScreen.HomeScreenEvent
-import com.compose.starter.spacingsAndBorders.circleBorder
 import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
-import com.compose.starter.theme.avatarBack
-import com.compose.starter.theme.avatarFront
-import com.compose.starter.utilities.secondOrNull
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.country
 import composestarter.composeapp.generated.resources.name
@@ -52,49 +38,46 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SettingsScreen(
-    padding: PaddingValues,
-    onEvent: (HomeScreenEvent) -> Unit,
-    viewModel: SettingsScreenViewModel,
-) {
-    LaunchedEffect(Unit) {
-        onEvent(HomeScreenEvent.ShowAppBar)
-    }
-
+fun SettingsScreen(viewModel: SettingsScreenViewModel) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    CleanContent(
-        padding,
-        uiState.apiState
-    ) { pad ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-                .padding(pad)
-                .padding(MaterialTheme.spacing.default),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large)
-        ) {
-            item {
-                UserAvatarImage(uiState)
-            }
+    Scaffold {
+        CleanContent(
+            PaddingValues(),
+            uiState.apiState
+        ) { pad ->
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+                    .padding(pad)
+                    .padding(MaterialTheme.spacing.default),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large)
+            ) {
+                item {
+                    UserAvatarImage(
+                        avatarUrl = uiState.accountDetail?.avatar?.tmdb?.avatarPath,
+                        userName = uiState.accountDetail?.name
+                    )
+                }
 
-            stringItemVisibility(value = uiState.accountDetail?.name) {
-                HeaderWithValue(stringResource(Res.string.name), it)
-            }
+                stringItemVisibility(value = uiState.accountDetail?.name) {
+                    HeaderWithValue(stringResource(Res.string.name), it)
+                }
 
-            stringItemVisibility(value = uiState.accountDetail?.username) {
-                HeaderWithValue(stringResource(Res.string.username), it)
-            }
+                stringItemVisibility(value = uiState.accountDetail?.username) {
+                    HeaderWithValue(stringResource(Res.string.username), it)
+                }
 
-            pairItemVisibility(value = getCountryInfoByCode(uiState.accountDetail?.iso31661)) {
-                HeaderWithCountryValue(stringResource(Res.string.country), it)
-            }
+                pairItemVisibility(value = getCountryInfoByCode(uiState.accountDetail?.iso31661)) {
+                    HeaderWithCountryValue(stringResource(Res.string.country), it)
+                }
 
-            item {
-                HeaderWithThemeValue(
-                    stringResource(Res.string.theme),
-                    uiState.theme,
-                    viewModel::updateTheme
-                )
+                item {
+                    HeaderWithThemeValue(
+                        stringResource(Res.string.theme),
+                        uiState.theme,
+                        viewModel::updateTheme
+                    )
+                }
             }
         }
     }
@@ -243,61 +226,15 @@ private fun ThemeRowValue(
 }
 
 @Composable
-private fun UserAvatarImage(uiState: SettingScreenUiState) {
-    val split = uiState.accountDetail?.name
-        ?.split(" ")
-        ?.mapNotNull { it.uppercase().firstOrNull() }
-
-    val userInitial =
-        (split?.firstOrNull()?.toString() ?: "").plus((split?.secondOrNull()?.toString() ?: ""))
-
+private fun UserAvatarImage(avatarUrl: String?, userName: String?) {
     Row(
         Modifier.fillMaxWidth()
             .wrapContentHeight(),
         horizontalArrangement = Arrangement.Center
     ) {
-        Box(
-            modifier = Modifier
-                .size(MaterialTheme.sizing.largeImageSize)
-                .background(
-                    color = avatarBack,
-                    shape = MaterialTheme.circleBorder.extraLarge
-                )
-        ) {
-            uiState.accountDetail?.avatar?.tmdb?.avatarPath?.let {
-                CoilImage(
-                    modifier = Modifier
-                        .size(MaterialTheme.sizing.mediumImageSize)
-                        .clip(MaterialTheme.circleBorder.extraLarge),
-                    url = AppConstants.CROP_SIZE_BASE_URL + it,
-                    contentDesc = ContentDescription.PROFILE_IMAGE,
-                    scale = ContentScale.Crop,
-                )
-
-            } ?: run {
-                Box(
-                    modifier = Modifier
-                        .size(MaterialTheme.sizing.mediumImageSize)
-                        .background(
-                            color = avatarFront,
-                            shape = MaterialTheme.circleBorder.extraLarge
-                        )
-                        .align(Alignment.Center),
-                    contentAlignment = Alignment.Center
-                ) {
-
-                    if (userInitial.isNotEmpty()) {
-                        Text(
-                            userInitial,
-                            style = MaterialTheme.typography.displayLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                fontSize = (MaterialTheme.typography.displayLarge.fontSize.value + 13f).sp
-                            ),
-                            color = Color.White
-                        )
-                    }
-                }
-            }
-        }
+        AvatarElseInitialLetter(
+            avatarUrl = avatarUrl,
+            userName = userName
+        )
     }
 }

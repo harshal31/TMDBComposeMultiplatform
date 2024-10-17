@@ -18,12 +18,11 @@ import com.compose.starter.appInitializations.AppLevelViewModel
 import com.compose.starter.di.getKoinValue
 import com.compose.starter.di.imageLoader
 import com.compose.starter.features.homeScreen.HomeScreen
-import com.compose.starter.features.homeScreen.HomeScreenViewModel
 import com.compose.starter.features.loginScreen.LoginScreen
 import com.compose.starter.features.loginScreen.LoginScreenViewModel
 import com.compose.starter.features.settingsScreen.ThemeMode
 import com.compose.starter.localData.LocalStore
-import com.compose.starter.routes.Screen
+import com.compose.starter.navGraphs.Screen
 import com.compose.starter.spacingsAndBorders.CircularBorder
 import com.compose.starter.spacingsAndBorders.LocalCircularBorder
 import com.compose.starter.spacingsAndBorders.LocalRectBorder
@@ -89,8 +88,7 @@ fun App(initialData: AppInitialData?) {
                 }
 
                 composable<Screen.HomeScreen> {
-                    val viewModel = koinViewModel<HomeScreenViewModel>()
-                    HomeScreen(viewModel)
+                    HomeScreen()
                 }
             }
         }

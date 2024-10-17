@@ -1,5 +1,6 @@
 package com.compose.starter.features.movieDetailScreen
 
+import com.compose.starter.di.ShareMediaData
 import com.compose.starter.features.settingsScreen.SettingsScreenRepository
 import com.compose.starter.formatCurrency
 import com.compose.starter.getDisplayLanguage
@@ -11,30 +12,36 @@ import composestarter.composeapp.generated.resources.budget
 import composestarter.composeapp.generated.resources.original_language
 import composestarter.composeapp.generated.resources.revenue
 import composestarter.composeapp.generated.resources.status
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 class MovieDetailScreenUseCase(
-    private val repository: MovieDetailScreenRepository,
+    private val movieDetailRepo: MovieDetailScreenRepository,
     private val settingRepo: SettingsScreenRepository,
+    private val shareMediaData: ShareMediaData,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(
         movieId: String,
         langCode: String = DefaultParameter.LANG_CODE,
-    ): Flow<MediaDetailUiState> {
+    ): Flow<MovieDetailUiState> {
         return combine(
-            repository.getAllMovieDetails(movieId, langCode),
-            repository.getSessionId(),
+            movieDetailRepo.getAllMovieDetails(movieId, langCode),
+            movieDetailRepo.getSessionId(),
             settingRepo.fetchUserInformation(),
-            repository.getImages(movieId, langCode.split("-").first()),
+            movieDetailRepo.getImages(movieId, langCode.split("-").first()),
         ) { detail, session, accountId, images ->
             if (detail.isFailure) {
-                MediaDetailUiState(
+                MovieDetailUiState(
                     apiState = detail.exceptionOrNull()?.message.mapErrorToApiIssue(),
                     sessionId = session,
                     accountId = accountId.getOrNull()?.id?.toString()
@@ -62,9 +69,29 @@ class MovieDetailScreenUseCase(
                         formatCurrency(movieDetail?.revenue, langCode),
                     ),
                 ).chunked(2)
-                MediaDetailUiState(
+
+
+                movieDetail?.credits?.let { credit ->
+                    val crewMap = credit.crew?.sortedBy {
+                        it.department ?: ""
+                    }?.groupBy {
+                        it.department ?: ""
+                    }?.mapValues {
+                        it.value.sortedBy { c -> c.name }.map { c -> c.mapToMappedCrew() }
+                    } ?: emptyMap()
+
+                    shareMediaData.updateCastAndCrewData(
+                        mediaName = movieDetail.title ?: "",
+                        casts = credit.cast?.map { it.mapToMappedCast() } ?: emptyList(),
+                        crewMap = crewMap,
+                        crewSize = credit.crew?.size ?: 0
+                    )
+                }
+
+                MovieDetailUiState(
                     apiState = ApiState.NONE,
-                    movieDetail = movieDetail?.copy(images = images.getOrNull()),
+                    movieDetail = movieDetail?.copy(images = images.getOrNull())
+                        ?.mapToMappedMovieDetail(),
                     sessionId = session,
                     certification = releaseInfo?.first,
                     releaseYear = releaseInfo?.third,
@@ -75,7 +102,7 @@ class MovieDetailScreenUseCase(
                 )
             }
         }.flatMapLatest { detail ->
-            repository.getAccountStates(movieId, detail.sessionId).map {
+            movieDetailRepo.getAccountStates(movieId, detail.sessionId).map {
                 val actState = it.getOrNull()
                 detail.copy(
                     rating = actState?.getRating() ?: 0,
@@ -83,6 +110,6 @@ class MovieDetailScreenUseCase(
                     shouldAddToWatchList = actState?.watchlist ?: false
                 )
             }
-        }
+        }.flowOn(dispatcher)
     }
 }

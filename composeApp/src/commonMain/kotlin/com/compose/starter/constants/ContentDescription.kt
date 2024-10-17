@@ -35,4 +35,8 @@ object ContentDescription {
     fun watchlist(shouldAddToWatchlist: Boolean): String {
         return if (shouldAddToWatchlist) ADD_TO_WATCHLIST else REMOVE_FROM_WATCHLIST
     }
+
+    fun personImage(name: String): String {
+        return "Person $name"
+    }
 }
