@@ -17,6 +17,9 @@ import com.compose.starter.features.moviesScreen.MoviesScreenRepository
 import com.compose.starter.features.moviesScreen.MoviesScreenViewModel
 import com.compose.starter.features.peopleScreen.PeopleScreenRepository
 import com.compose.starter.features.peopleScreen.PeopleScreenViewModel
+import com.compose.starter.features.personDetailScreen.PersonDetailRepository
+import com.compose.starter.features.personDetailScreen.PersonDetailUseCase
+import com.compose.starter.features.personDetailScreen.PersonDetailViewModel
 import com.compose.starter.features.settingsScreen.SettingsScreenRepository
 import com.compose.starter.features.settingsScreen.SettingsScreenViewModel
 import com.compose.starter.features.tvSeriesScreen.TvSeriesScreenRepository
@@ -30,10 +33,10 @@ import org.koin.dsl.module
 import org.koin.mp.KoinPlatformTools
 
 
-fun appLevelBuildInfo(
+private fun appLevelBuildInfo(
     isLogEnabled: Boolean,
 ) = module {
-    single<AppBuildInfo> {
+    single {
         AppBuildInfo(
             isLoggingEnabled = isLogEnabled,
         )
@@ -41,22 +44,25 @@ fun appLevelBuildInfo(
 }
 
 private val repoConstructorParamModules = module {
-    single<NetworkManager> { NetworkManager(httpClientEngine = get(), buildInfo = get()) }
-    single<LocalStore> { LocalStore(store = get()) }
-    single<ShareMediaData> { ShareMediaData() }
+    single { NetworkManager(httpClientEngine = get(), buildInfo = get()) }
+    single { LocalStore(store = get()) }
+    single { ShareMediaData() }
 }
 
 private val repoModules = module {
-    factory<LoginScreenRepository> { LoginScreenRepository(network = get(), store = get()) }
-    factory<MoviesScreenRepository> { MoviesScreenRepository(network = get()) }
-    factory<TvSeriesScreenRepository> { TvSeriesScreenRepository(network = get()) }
-    factory<SettingsScreenRepository> { SettingsScreenRepository(network = get(), store = get()) }
-    factory<PeopleScreenRepository> { PeopleScreenRepository(network = get()) }
-    factory<MovieDetailScreenRepository> {
+    factory { LoginScreenRepository(network = get(), store = get()) }
+    factory { MoviesScreenRepository(network = get()) }
+    factory { TvSeriesScreenRepository(network = get()) }
+    factory { SettingsScreenRepository(network = get(), store = get()) }
+    factory { PeopleScreenRepository(network = get()) }
+    factory {
         MovieDetailScreenRepository(
             network = get(),
             store = get()
         )
+    }
+    factory {
+        PersonDetailRepository(network = get())
     }
 }
 
@@ -68,25 +74,29 @@ private val useCaseModules = module {
             shareMediaData = get()
         )
     }
+
+    factory {
+        PersonDetailUseCase(repository = get())
+    }
 }
 
 private val viewModelModules = module {
-    viewModel<LoginScreenViewModel> { LoginScreenViewModel(repository = get()) }
-    viewModel<MoviesScreenViewModel> { MoviesScreenViewModel(repository = get()) }
-    viewModel<TvSeriesScreenViewModel> { TvSeriesScreenViewModel(repository = get()) }
-    viewModel<SettingsScreenViewModel> { SettingsScreenViewModel(repository = get()) }
-    viewModel<AppLevelViewModel> { AppLevelViewModel(store = get()) }
-    viewModel<PeopleScreenViewModel> { PeopleScreenViewModel(repository = get()) }
-    viewModel<MovieDetailScreenModel> {
+    viewModel { LoginScreenViewModel(repository = get()) }
+    viewModel { MoviesScreenViewModel(repository = get()) }
+    viewModel { TvSeriesScreenViewModel(repository = get()) }
+    viewModel { SettingsScreenViewModel(repository = get()) }
+    viewModel { AppLevelViewModel(store = get()) }
+    viewModel { PeopleScreenViewModel(repository = get()) }
+    viewModel {
         MovieDetailScreenModel(
             movieDetailUseCase = get(),
             repository = get(),
         )
     }
+    viewModel { PersonDetailViewModel(personDetailUseCase = get()) }
 }
 
-
-fun KoinApplication.appLevelModules(
+fun KoinApplication.initializeModules(
     context: Any?,
     isLoggingEnabled: Boolean,
 ): KoinApplication {
@@ -97,10 +107,12 @@ fun KoinApplication.appLevelModules(
     )
 }
 
-val appModules = listOf(
-    repoConstructorParamModules, repoModules, useCaseModules, viewModelModules
+private val appModules = listOf(
+    repoConstructorParamModules,
+    repoModules,
+    useCaseModules,
+    viewModelModules
 )
-
 
 inline fun <reified T : Any> getKoinValue() = KoinPlatformTools.defaultContext().get().get<T>()
 

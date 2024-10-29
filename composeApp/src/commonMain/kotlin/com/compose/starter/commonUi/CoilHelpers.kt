@@ -14,12 +14,14 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import coil3.size.Precision
 import coil3.toBitmap
 import com.compose.starter.constants.AppConstants
 import com.compose.starter.constants.ContentDescription
@@ -35,6 +37,7 @@ import com.kmpalette.palette.graphics.Palette
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.image_error_placeholder
 import composestarter.composeapp.generated.resources.image_loader_placeholder
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -57,6 +60,22 @@ fun CoilImage(
         contentDescription = contentDesc,
         placeholder = placeHolder,
         error = errorPlaceholder,
+        contentScale = scale,
+    )
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun CoilDrawableImage(
+    modifier: Modifier = Modifier,
+    drawableName: String,
+    contentDesc: String = "",
+    scale: ContentScale = ContentScale.Fit
+) {
+    AsyncImage(
+        modifier = modifier,
+        model = Res.getUri("drawable/$drawableName"),
+        contentDescription = contentDesc,
         contentScale = scale,
     )
 }
@@ -112,6 +131,32 @@ fun CoilCropSizeImage(
 
 
 @Composable
+fun AnoCoilCropSizeImage(
+    size: DpSize,
+    url: String,
+    contentScale: ContentScale = ContentScale.Fit,
+    contentDescription: String = "",
+    placeHolder: Painter? = painterResource(Res.drawable.image_loader_placeholder),
+) {
+    AsyncImage(
+        modifier = Modifier.size(size),
+        model = ImageRequest
+            .Builder(LocalPlatformContext.current)
+            .size(width = size.width.value.toInt(), height = size.height.value.toInt())
+            .precision(Precision.EXACT)
+            .data(url)
+            .diskCachePolicy(CachePolicy.ENABLED)
+            .crossfade(true)
+            .build(),
+        contentDescription = ContentDescription.contentImage(contentDescription),
+        placeholder = placeHolder,
+        error = painterResource(Res.drawable.image_error_placeholder),
+        contentScale = contentScale,
+    )
+}
+
+
+@Composable
 fun CoilFullSizeImage(
     modifier: Modifier = Modifier,
     url: String,
@@ -149,7 +194,11 @@ fun AvatarElseInitialLetter(
         ?.split(" ")
         ?.mapNotNull { it.uppercase().firstOrNull() }
 
-    val userInitial = (split?.firstOrNull()?.toString() ?: "").plus((split?.secondOrNull()?.toString() ?: ""))
+    val userInitial = when (split?.size) {
+        1 -> split.firstOrNull()?.toString() ?: "-"
+        2 -> (split.firstOrNull()?.toString() ?: "-").plus((split.secondOrNull()?.toString() ?: "-"))
+        else -> "-"
+    }
 
     Box(
         modifier = Modifier

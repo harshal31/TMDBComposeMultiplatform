@@ -80,12 +80,10 @@ class MovieDetailScreenUseCase(
                         it.value.sortedBy { c -> c.name }.map { c -> c.mapToMappedCrew() }
                     } ?: emptyMap()
 
-                    shareMediaData.updateCastAndCrewData(
-                        mediaName = movieDetail.title ?: "",
+                    shareMediaData.updateCastAndCrewData(mediaName = movieDetail.title ?: "",
                         casts = credit.cast?.map { it.mapToMappedCast() } ?: emptyList(),
                         crewMap = crewMap,
-                        crewSize = credit.crew?.size ?: 0
-                    )
+                        crewSize = credit.crew?.size ?: 0)
                 }
 
                 MovieDetailUiState(
@@ -98,6 +96,8 @@ class MovieDetailScreenUseCase(
                     accountId = accountId.getOrNull()?.id?.toString(),
                     overviewPairs = overviewPairs,
                     importantCrewMap = movieDetail?.credits?.getImportantCastAndCrew()
+                        ?: emptyList(),
+                    externalLinks = movieDetail?.externalIds?.mapToExternalLinks(movieDetail.homepage)
                         ?: emptyList()
                 )
             }

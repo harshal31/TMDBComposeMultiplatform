@@ -2,7 +2,6 @@ package com.compose.starter.features.movieDetailScreen.movieDetailUiComponents
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -18,15 +17,19 @@ import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
 
 
-@Composable fun RecommendedLazyRow(recommendationLists: List<MappedRecommended>) {
+@Composable
+fun RecommendedLazyRow(
+    modifier: Modifier,
+    recommendations: List<MappedRecommended>
+) {
     LazyRow(
         modifier = Modifier
             .height(MaterialTheme.sizing.largeTileHeight)
-            .padding(horizontal = MaterialTheme.spacing.default),
+            .then(modifier),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
         items(
-            recommendationLists,
+            recommendations,
             key = { it.id ?: 0 }
         ) {
             OutlinedCard(
@@ -49,15 +52,18 @@ import com.compose.starter.spacingsAndBorders.spacing
 
 
 @Composable
-fun SimilarLazyRow(recommendationLists: List<MappedSimilar>) {
+fun SimilarLazyRow(
+    modifier: Modifier,
+    similars: List<MappedSimilar>
+) {
     LazyRow(
         modifier = Modifier
             .height(MaterialTheme.sizing.largeTileHeight)
-            .padding(horizontal = MaterialTheme.spacing.default),
+            .then(modifier),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
         items(
-            recommendationLists,
+            similars,
             key = { it.id ?: 0 }
         ) {
             OutlinedCard(

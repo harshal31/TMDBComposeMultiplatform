@@ -11,7 +11,6 @@ import com.compose.starter.features.movieDetailScreen.MovieDetailScreen
 import com.compose.starter.features.movieDetailScreen.MovieDetailScreenModel
 import com.compose.starter.features.moviesScreen.MoviesScreen
 import com.compose.starter.features.moviesScreen.MoviesScreenViewModel
-import com.compose.starter.features.peopleDetailScreen.PeopleDetailScreen
 import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -24,39 +23,35 @@ fun NavGraphBuilder.moviesGraph(navController: NavController) {
                 viewModel = viewModel,
                 goToMoreScreen = {},
                 onItemClick = { movieId ->
-                    navController.navigate(Movie.DetailScreen(movieId))
+                    navController.navigate(Movie.Detail(movieId))
                 }
             )
         }
 
-        composable<Movie.DetailScreen> {
+        composable<Movie.Detail> {
             val viewModel = koinViewModel<MovieDetailScreenModel>()
-            val shareData = it.toRoute<Movie.DetailScreen>()
+            val shareData = it.toRoute<Movie.Detail>()
             MovieDetailScreen(
                 id = shareData.movieId,
                 viewModel = viewModel,
-                navigateToDetail = { screen ->
-                    navController.navigate(screen)
+                navigate = { screen ->
+                    screen.navigateToSpecificGraph(navController)
                 }
             ) {
                 navController.navigateUp()
             }
         }
 
-        composable<Movie.CastAndCrewListScreen> {
+        composable<Movie.CastAndCrewList> {
             val shareMediaData = koinInject<ShareMediaData>()
             CastAndCrewListScreen(
                 shareMediaData = shareMediaData,
+                navigateToDetail = { screen ->
+                    screen.navigateToSpecificGraph(navController)
+                }
             ) {
                 navController.navigateUp()
             }
-        }
-
-        composable<Movie.PeopleScreen> {
-            val shareData = it.toRoute<Movie.PeopleScreen>()
-            PeopleDetailScreen(
-                castId = shareData.castId
-            )
         }
     }
 }
@@ -64,19 +59,25 @@ fun NavGraphBuilder.moviesGraph(navController: NavController) {
 
 @Serializable
 sealed interface Movie {
+    @Serializable
+    data object Graph : Movie
 
     @Serializable
-    data object Graph: Movie
+    data object Movies : Movie
 
     @Serializable
-    data object Movies: Movie
+    data class Detail(val movieId: String) : Movie
 
     @Serializable
-    data class DetailScreen(val movieId: String) : Movie
+    data object CastAndCrewList : Movie
 
     @Serializable
-    data object CastAndCrewListScreen : Movie
+    data class CastDetail(val personId: Int) : Movie
 
-    @Serializable
-    data class PeopleScreen(val castId: Int) : Movie
+    fun navigateToSpecificGraph(navController: NavController) {
+        when (this) {
+            is CastDetail -> navController.navigate(Person.Detail(personId))
+            else -> navController.navigate(this)
+        }
+    }
 }

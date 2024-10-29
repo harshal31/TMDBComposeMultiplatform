@@ -63,6 +63,7 @@
     <string name="posters">Posters</string>
     <string name="cast">Cast</string>
     <string name="crew">Crew</string>
+    <string name="overview_not_present">Overview is not added yet</string>
 
 
     <plurals name="cast">
@@ -74,5 +75,26 @@
         <item quantity="one">Crew</item>
         <item quantity="other">Crews (%1$d)</item>
     </plurals>
+
+    <plurals name="year">
+        <item quantity="one">(%1$d year old)</item>
+        <item quantity="other">(%1$d years old)</item>
+    </plurals>
+
+    <string name="year">year</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="nonBinary">Non-binary</string>
+    <string name="knownFor">Known For</string>
+    <string name="bornOn">Born on</string>
+    <string name="gender">Gender</string>
+    <string name="bio">Biography</string>
+    <string name="birthPlace">Birthplace</string>
+    <string name="about">About</string>
+    <string name="profiles">Profiles</string>
+    <string name="as_character">as %1$s</string>
+
+
+
 
 </resources>

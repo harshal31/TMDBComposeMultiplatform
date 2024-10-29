@@ -25,9 +25,9 @@ import composestarter.composeapp.generated.resources.written_by
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ReviewCard(review: MappedReview) {
+fun ReviewCard(modifier: Modifier, review: MappedReview) {
     Box(
-        modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default)
+        modifier = Modifier.then(modifier)
     ) {
         OutlinedCard(
             modifier = Modifier.fillMaxWidth(),

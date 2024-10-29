@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 
 
 private data object SpacingDefaults {
+    const val NONE = 0
     const val TINY = 2
     const val EXTRA_SMALL = 4
     const val SMALL = 8
@@ -19,6 +20,7 @@ private data object SpacingDefaults {
 }
 
 data class Spacing(
+    val none: Dp = 0.dp,
     val default: Dp = SpacingDefaults.DEFAULT.dp,
     val tiny: Dp = SpacingDefaults.TINY.dp,
     val extraSmall: Dp = SpacingDefaults.EXTRA_SMALL.dp,

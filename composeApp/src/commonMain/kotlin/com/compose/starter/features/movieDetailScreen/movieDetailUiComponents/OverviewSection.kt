@@ -32,7 +32,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import com.compose.starter.commonUi.DetailTitleWithIcon
 import com.compose.starter.commonUi.ExpandableText
+import com.compose.starter.commonUi.ExternalLink
+import com.compose.starter.commonUi.ExternalLinksUi
 import com.compose.starter.commonUi.TmdbPosterBottomSheet
 import com.compose.starter.features.movieDetailScreen.OverviewPair
 import com.compose.starter.screenWidth
@@ -48,16 +51,14 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OverviewSection(
+    modifier: Modifier,
     title: String?,
     overview: String,
     posterPath: String?,
     importantCrewMap: List<Pair<String, String>>,
     overviewPairs: List<List<OverviewPair>>,
+    externalLinks: List<ExternalLink>,
 ) {
-    if (overview.isEmpty()) {
-        return
-    }
-
     val scope = rememberCoroutineScope()
     var isBottomSheetVisible by rememberSaveable { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(
@@ -68,10 +69,10 @@ fun OverviewSection(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(horizontal = MaterialTheme.spacing.default)
+            .then(modifier)
             .animateContentSize()
     ) {
-        MovieDetailTitleIcon(
+        DetailTitleWithIcon(
             title = stringResource(Res.string.overview),
             endIcon = Icons.Sharp.MoreVert,
             onEndIconClick = {
@@ -115,78 +116,13 @@ fun OverviewSection(
                     )
                 }
 
+                ExternalLinksUi(externalLinks)
+
                 Spacer(Modifier.height(MaterialTheme.spacing.small))
 
-                overviewPairs.forEach { pair ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(bottom = MaterialTheme.spacing.small),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        pair.forEachIndexed { index, it ->
-                            Column(
-                                modifier = Modifier.weight(1f),
-                                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.tiny)
-                            ) {
-                                Text(
-                                    stringResource(it.title),
-                                    modifier = Modifier.fillMaxWidth(),
-                                    style = MaterialTheme.typography.titleMedium.copy(
-                                        fontWeight = FontWeight.Bold
-                                    ),
-                                    textAlign = if (index == 0) TextAlign.Start else TextAlign.End,
-                                )
+                MovieReleaseInfoPair(overviewPairs)
 
-                                Text(
-                                    it.value ?: "-",
-                                    modifier = Modifier.fillMaxWidth(),
-                                    style = MaterialTheme.typography.titleSmall,
-                                    textAlign = if (index == 0) TextAlign.Start else TextAlign.End,
-                                )
-                            }
-                        }
-                    }
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Max)
-                        .horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    importantCrewMap.forEach {
-                        OutlinedCard(
-                            modifier = Modifier
-                                .width(screenWidth * 0.5f)
-                                .fillMaxHeight()
-                                .padding(end = MaterialTheme.spacing.small)
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .padding(MaterialTheme.spacing.extraSmall),
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    it.first,
-                                    modifier = Modifier.fillMaxWidth(),
-                                    style = MaterialTheme.typography.labelMedium.copy(
-                                        fontWeight = FontWeight.Bold
-                                    ),
-                                    textAlign = TextAlign.Center,
-                                )
-                                Text(
-                                    it.second,
-                                    modifier = Modifier.fillMaxWidth(),
-                                    style = MaterialTheme.typography.labelSmall,
-                                    textAlign = TextAlign.Center,
-                                )
-                            }
-                        }
-                    }
-                }
+                ImportantMovieCrew(importantCrewMap)
 
                 Spacer(Modifier.height(MaterialTheme.spacing.small))
 
@@ -205,6 +141,86 @@ fun OverviewSection(
                         stringResource(Res.string.cancel),
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.titleMedium,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MovieReleaseInfoPair(overviewPairs: List<List<OverviewPair>>) {
+    overviewPairs.forEach { pair ->
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .padding(bottom = MaterialTheme.spacing.small),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            pair.forEachIndexed { index, it ->
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.tiny)
+                ) {
+                    Text(
+                        stringResource(it.title),
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            fontWeight = FontWeight.Light
+                        ),
+                        textAlign = if (index == 0) TextAlign.Start else TextAlign.End,
+                    )
+
+                    Text(
+                        it.value ?: "-",
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        textAlign = if (index == 0) TextAlign.Start else TextAlign.End,
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun ImportantMovieCrew(importantCrewMap: List<Pair<String, String>>) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Max)
+            .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        importantCrewMap.forEach {
+            OutlinedCard(
+                modifier = Modifier
+                    .width(screenWidth * 0.5f)
+                    .fillMaxHeight()
+                    .padding(end = MaterialTheme.spacing.small)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(MaterialTheme.spacing.extraSmall),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        it.first,
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        textAlign = TextAlign.Center,
+                    )
+                    Text(
+                        it.second,
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typography.labelSmall,
                         textAlign = TextAlign.Center,
                     )
                 }

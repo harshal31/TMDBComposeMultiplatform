@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import com.compose.starter.commonUi.CoilCropSizeImage
 import com.compose.starter.navGraphs.Movie
 import com.compose.starter.networking.model.MappedCast
@@ -30,13 +31,14 @@ import com.compose.starter.spacingsAndBorders.spacing
 
 @Composable
 fun FeaturedCastRow(
+    modifier: Modifier,
     casts: List<MappedCast>,
     navigateToDetail: (Movie) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = MaterialTheme.spacing.default)
+            .then(modifier)
             .height(IntrinsicSize.Max)
             .horizontalScroll(rememberScrollState())
     ) {
@@ -48,22 +50,22 @@ fun FeaturedCastRow(
                         .padding(end = MaterialTheme.spacing.small),
                     onClick = {
                         cast.id?.let {
-                            navigateToDetail(Movie.PeopleScreen(it))
+                            navigateToDetail(Movie.CastDetail(it))
                         }
                     }
                 ) {
                     Column(
-                        modifier = Modifier.width(MaterialTheme.sizing.largeTileWidth)
+                        modifier = Modifier.width(MaterialTheme.sizing.oneTwenty)
                             .fillMaxHeight(),
                         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
                     ) {
                         CoilCropSizeImage(
                             modifier = Modifier.size(
-                                MaterialTheme.sizing.largeTileWidth,
+                                MaterialTheme.sizing.oneTwenty,
                                 MaterialTheme.sizing.oneEighty,
                             ),
                             url = cast.profilePath,
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.FillHeight
                         )
 
                         Text(
@@ -80,6 +82,8 @@ fun FeaturedCastRow(
                             modifier = Modifier.fillMaxWidth(),
                             style = MaterialTheme.typography.titleSmall,
                             textAlign = TextAlign.Center,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }

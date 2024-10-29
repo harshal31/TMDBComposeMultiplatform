@@ -1,16 +1,13 @@
 package com.compose.starter.features.movieDetailScreen.movieDetailUiComponents
 
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -36,10 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import com.compose.starter.commonUi.CircleIcon
 import com.compose.starter.commonUi.CoilCropSizeImage
 import com.compose.starter.commonUi.CoilImage
-import com.compose.starter.commonUi.TmdbDivider
+import com.compose.starter.commonUi.DetailTitleWithIcon
 import com.compose.starter.constants.AppConstants
 import com.compose.starter.constants.ContentDescription
 import com.compose.starter.networking.model.MappedBackdrops
@@ -59,6 +57,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MediaSection(
+    modifier: Modifier,
     videos: List<MappedVideo>?,
     posters: List<MappedImagePoster>?,
     backdrops: List<MappedBackdrops>?,
@@ -96,9 +95,9 @@ fun MediaSection(
     Column(
         modifier = Modifier
             .wrapContentHeight()
-            .padding(MaterialTheme.spacing.default),
+            .then(modifier),
     ) {
-        MovieDetailTitleIcon(
+        DetailTitleWithIcon(
             title = stringResource(Res.string.media),
             endIcon = Icons.Sharp.MoreVert,
             onEndIconClick = {
@@ -129,7 +128,10 @@ fun MediaSection(
             }
         )
 
-        TabRow(selectedTabIndex = currentTabIndex) {
+        TabRow(
+            selectedTabIndex = currentTabIndex,
+            modifier = Modifier.padding(MaterialTheme.spacing.none)
+        ) {
             tabs.forEachIndexed { index, tabItem ->
                 Tab(
                     selected = index == currentTabIndex,
@@ -141,7 +143,7 @@ fun MediaSection(
                         Text(
                             text = stringResource(tabItem.title),
                             style = MaterialTheme.typography.titleSmall.copy(
-                                fontWeight = if (currentTabIndex == index) FontWeight.Bold else FontWeight.Normal
+                                fontWeight = FontWeight.Bold
                             )
                         )
                     }
@@ -155,7 +157,7 @@ fun MediaSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(top = MaterialTheme.spacing.extraSmall)
+                .padding(top = MaterialTheme.spacing.small)
         ) {
             when (tabs[currentTabIndex].pos) {
                 0 -> MediaVideos(videos ?: emptyList())
@@ -164,11 +166,6 @@ fun MediaSection(
                 else -> {}
             }
         }
-
-        TmdbDivider(
-            modifier = Modifier.padding(vertical = MaterialTheme.spacing.small),
-            isVertical = false,
-        )
     }
 }
 
@@ -177,16 +174,13 @@ private fun MediaVideos(results: List<MappedVideo>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(IntrinsicSize.Max)
+            .wrapContentHeight()
             .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
         results.take(9).forEach {
             key(it.key) {
-                Column(
-                    modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(end = MaterialTheme.spacing.medium)
-                ) {
+                Column(modifier = Modifier.fillMaxHeight()) {
                     Box(
                         modifier = Modifier
                             .size(
@@ -221,13 +215,11 @@ private fun MediaVideos(results: List<MappedVideo>) {
                     Text(
                         it.name,
                         maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
-                            .width(MaterialTheme.sizing.twoSeventy)
-                            .basicMarquee(),
+                            .width(MaterialTheme.sizing.twoSeventy),
                         style = MaterialTheme.typography.titleMedium
                     )
-
-                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 }
             }
         }
@@ -239,7 +231,8 @@ private fun MediaPosters(posters: List<MappedImagePoster>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .horizontalScroll(rememberScrollState())
+            .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
         posters.take(9).forEach {
             key(it.filePath) {
@@ -249,7 +242,6 @@ private fun MediaPosters(posters: List<MappedImagePoster>) {
                             width = MaterialTheme.sizing.largeTileWidth,
                             height = MaterialTheme.sizing.twoHundred
                         )
-                        .padding(MaterialTheme.spacing.small)
                 ) {
                     CoilCropSizeImage(
                         modifier = Modifier.fillMaxSize(),
@@ -268,7 +260,8 @@ private fun MediaBackdrops(backdrops: List<MappedBackdrops>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .horizontalScroll(rememberScrollState())
+            .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
         backdrops.take(9).forEach {
             key(it.filePath) {
@@ -278,7 +271,6 @@ private fun MediaBackdrops(backdrops: List<MappedBackdrops>) {
                             width = MaterialTheme.sizing.twoFifty,
                             height = MaterialTheme.sizing.largeTileWidth
                         )
-                        .padding(MaterialTheme.spacing.small)
                 ) {
                     CoilCropSizeImage(
                         modifier = Modifier.fillMaxSize(),
@@ -313,3 +305,6 @@ sealed interface TabItemDataClick {
 }
 
 private data class TabItem(val title: StringResource, val pos: Int)
+
+
+//.basicMarquee()  we can used if we scroll text automatically horizontally if

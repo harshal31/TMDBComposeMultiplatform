@@ -1,8 +1,12 @@
 package com.compose.starter.utilities
 
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
 import io.github.aakira.napier.Napier
 import io.ktor.util.StringValues
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -81,5 +85,23 @@ fun pluralResource(
         pluralStringResource(res.second, quantity)
     } else {
         pluralStringResource(res.second, quantity, *formatArgs)
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun CoroutineScope.showBottomSheet(sheetState: SheetState, onExpand: (Boolean) -> Unit) {
+    launch {
+        sheetState.expand()
+        onExpand.invoke(true)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun CoroutineScope.hideBottomSheet(sheetState: SheetState, onHide: (Boolean) -> Unit) {
+    launch {
+        sheetState.hide()
+    }.invokeOnCompletion {
+        onHide(false)
     }
 }

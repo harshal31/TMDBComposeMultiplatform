@@ -27,3 +27,5 @@ expect fun platformImageRequest(context: PlatformContext, url: String): ImageReq
 expect fun formatCurrency(input: Int?, locale: String): String
 
 expect fun getDisplayLanguage(locale: String?): String
+
+expect fun openLinkInBrowser(url: String)

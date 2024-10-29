@@ -1,6 +1,7 @@
 package com.compose.starter.features.movieDetailScreen
 
 import androidx.compose.runtime.Immutable
+import com.compose.starter.commonUi.ExternalLink
 import com.compose.starter.networking.ApiState
 import com.compose.starter.networking.model.MappedMovieDetail
 import org.jetbrains.compose.resources.StringResource
@@ -18,6 +19,7 @@ data class MovieDetailUiState(
     val rating: Int = 0,
     val overviewPairs: List<List<OverviewPair>> = emptyList(),
     val importantCrewMap: List<Pair<String, String>> = emptyList(),
+    val externalLinks: List<ExternalLink> = emptyList(),
 )
 
 

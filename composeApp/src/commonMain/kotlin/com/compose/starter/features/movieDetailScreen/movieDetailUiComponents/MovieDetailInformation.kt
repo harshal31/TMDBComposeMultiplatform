@@ -253,16 +253,17 @@ private fun MediaInfoRow(
                     color = Color.White
                 )
             }
+        }?.also {
+            VerticalDivider(
+                modifier = Modifier.fillMaxHeight()
+                    .padding(
+                        horizontal = MaterialTheme.spacing.small,
+                        vertical = MaterialTheme.spacing.extraSmall
+                    ),
+                color = MaterialTheme.colorScheme.outline
+            )
         }
 
-        VerticalDivider(
-            modifier = Modifier.fillMaxHeight()
-                .padding(
-                    horizontal = MaterialTheme.spacing.small,
-                    vertical = MaterialTheme.spacing.extraSmall
-                ),
-            color = MaterialTheme.colorScheme.outline
-        )
         releaseYear?.let {
             Text(
                 it,
@@ -274,15 +275,17 @@ private fun MediaInfoRow(
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.White
             )
+        }?.also {
+            VerticalDivider(
+                modifier = Modifier.fillMaxHeight()
+                    .padding(
+                        horizontal = MaterialTheme.spacing.small,
+                        vertical = MaterialTheme.spacing.extraSmall
+                    ),
+                color = MaterialTheme.colorScheme.outline
+            )
         }
-        VerticalDivider(
-            modifier = Modifier.fillMaxHeight()
-                .padding(
-                    horizontal = MaterialTheme.spacing.small,
-                    vertical = MaterialTheme.spacing.extraSmall
-                ),
-            color = MaterialTheme.colorScheme.outline
-        )
+
         IconButton(
             modifier = Modifier.size(MaterialTheme.sizing.large),
             onClick = {

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -32,6 +31,7 @@ import com.compose.starter.commonUi.CoilFullSizeImage
 import com.compose.starter.commonUi.TmdbDivider
 import com.compose.starter.constants.ContentDescription
 import com.compose.starter.di.ShareMediaData
+import com.compose.starter.navGraphs.Movie
 import com.compose.starter.networking.model.MappedCast
 import com.compose.starter.networking.model.MappedCrew
 import com.compose.starter.spacingsAndBorders.rectBorder
@@ -50,6 +50,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun CastAndCrewListScreen(
     shareMediaData: ShareMediaData,
+    navigateToDetail: (Movie) -> Unit,
     onBack: () -> Unit,
 ) {
     val typography = MaterialTheme.typography
@@ -79,9 +80,9 @@ fun CastAndCrewListScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
+                modifier = Modifier.padding(start = MaterialTheme.spacing.default),
                 navigationIcon = {
                     CircleIcon(
-                        modifier = Modifier.size(MaterialTheme.sizing.extraLarge),
                         icon = Res.drawable.arrow_back,
                         onIconClick = onBack
                     )
@@ -122,19 +123,23 @@ fun CastAndCrewListScreen(
                     horizontalArrangement = Arrangement.spacedBy(spaceBetween),
                     verticalArrangement = Arrangement.spacedBy(spaceBetween),
                     content = {
-                        items(uiState.casts, key = { it.id ?: "" }) {
+                        items(
+                            uiState.casts,
+                            key = { it.id ?: "" }
+                        ) {
                             CastItem(
-                                Modifier
+                                modifier = Modifier
                                     .fillMaxWidth()
                                     .height(gridItemSize),
-                                it
+                                mappedCast = it,
+                                navigateToDetail = navigateToDetail
                             )
                         }
                     }
                 )
             }
 
-            item(key = "tmdb_divider") {
+            item {
                 TmdbDivider(
                     modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium),
                     isVertical = false,
@@ -173,12 +178,16 @@ fun CastAndCrewListScreen(
                         horizontalArrangement = Arrangement.spacedBy(spaceBetween),
                         verticalArrangement = Arrangement.spacedBy(spaceBetween),
                         content = {
-                            items(values, key = { it.hashCode() }) {
+                            items(
+                                values,
+                                key = { it.hashCode() }
+                            ) {
                                 CrewItem(
-                                    Modifier
+                                    modifier = Modifier
                                         .fillMaxWidth()
                                         .height(gridItemSize),
-                                    it
+                                    mappedCrew = it,
+                                    navigateToDetail = navigateToDetail
                                 )
                             }
                         }
@@ -190,22 +199,31 @@ fun CastAndCrewListScreen(
 }
 
 @Composable
-private fun CastItem(modifier: Modifier, it: MappedCast) {
-    OutlinedCard(modifier = modifier) {
+private fun CastItem(
+    modifier: Modifier,
+    mappedCast: MappedCast,
+    navigateToDetail: (Movie) -> Unit
+) {
+    OutlinedCard(
+        modifier = modifier,
+        onClick = {
+            navigateToDetail(Movie.CastDetail(mappedCast.id ?: -1))
+        }
+    ) {
         Column(modifier = modifier) {
             CoilFullSizeImage(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(MaterialTheme.sizing.oneForty)
                     .clip(MaterialTheme.rectBorder.bottomLevelMediumBorder),
-                url = it.profilePath,
+                url = mappedCast.profilePath,
                 contentScale = ContentScale.Crop,
-                contentDescription = ContentDescription.personImage(it.name),
+                contentDescription = ContentDescription.personImage(mappedCast.name),
                 errorPlaceholder = painterResource(Res.drawable.people_filled)
             )
             Spacer(Modifier.height(MaterialTheme.spacing.small))
             Text(
-                it.name,
+                mappedCast.name,
                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.extraSmall),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold
@@ -215,7 +233,7 @@ private fun CastItem(modifier: Modifier, it: MappedCast) {
             )
             Spacer(Modifier.height(MaterialTheme.spacing.extraSmall))
             Text(
-                it.character,
+                mappedCast.character,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.extraSmall),
                 color = MaterialTheme.colorScheme.primary,
@@ -231,23 +249,29 @@ private fun CastItem(modifier: Modifier, it: MappedCast) {
 @Composable
 private fun CrewItem(
     modifier: Modifier,
-    it: MappedCrew,
+    mappedCrew: MappedCrew,
+    navigateToDetail: (Movie) -> Unit,
 ) {
-    OutlinedCard(modifier = modifier) {
+    OutlinedCard(
+        modifier = modifier,
+        onClick = {
+            navigateToDetail(Movie.CastDetail(mappedCrew.id ?: -1))
+        }
+    ) {
         Column(modifier = modifier) {
             CoilFullSizeImage(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(MaterialTheme.sizing.oneForty)
                     .clip(MaterialTheme.rectBorder.bottomLevelMediumBorder),
-                url = it.profilePath,
+                url = mappedCrew.profilePath,
                 contentScale = ContentScale.Crop,
-                contentDescription = ContentDescription.personImage(it.name),
+                contentDescription = ContentDescription.personImage(mappedCrew.name),
                 errorPlaceholder = painterResource(Res.drawable.people_filled)
             )
             Spacer(Modifier.height(MaterialTheme.spacing.small))
             Text(
-                it.name,
+                mappedCrew.name,
                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.extraSmall),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold
@@ -257,7 +281,7 @@ private fun CrewItem(
             )
             Spacer(Modifier.height(MaterialTheme.spacing.extraSmall))
             Text(
-                it.job,
+                mappedCrew.job,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.extraSmall),
                 color = MaterialTheme.colorScheme.primary,

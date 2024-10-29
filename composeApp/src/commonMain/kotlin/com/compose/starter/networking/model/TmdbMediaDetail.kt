@@ -1,8 +1,10 @@
 package com.compose.starter.networking.model
 
 import androidx.compose.runtime.Immutable
+import com.compose.starter.commonUi.ExternalLink
 import com.compose.starter.networking.DefaultParameter
 import com.compose.starter.utilities.formatDate
+import io.github.aakira.napier.Napier
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -152,7 +154,27 @@ data class ExternalIds(
     val twitterId: String? = null, // blinktwicemovie
     @SerialName("wikidata_id")
     val wikidataId: String? = null, // Q113012523
-)
+) {
+    fun mapToExternalLinks(homepage: String?): List<ExternalLink> {
+        return listOfNotNull(
+            facebookId?.let {
+                ExternalLink.Facebook(it)
+            },
+            twitterId?.let {
+                ExternalLink.Twitter(it)
+            },
+            imdbId?.let {
+                ExternalLink.ImdbMediaProfile(it)
+            },
+            instagramId?.let {
+                ExternalLink.Instagram(it)
+            },
+            homepage?.let {
+                ExternalLink.HomePage(it)
+            }
+        )
+    }
+}
 
 
 @Immutable
@@ -454,7 +476,7 @@ data class ReviewResult(
             authorUsername = authorDetails?.username ?: "-",
             avatarPath = authorDetails?.avatarPath ?: "-",
             content = content ?: "-",
-            createdAt = createdAt.formatDate() ?: "-",
+            createdAt = createdAt.formatDate(),
             reviewUrl = url ?: "-"
         )
     }
@@ -632,6 +654,7 @@ data class AccountState(
     val watchlist: Boolean? = null,
 ) {
     fun getRating(): Int {
+        Napier.d("rating for this movie is $rated and watchlist is $watchlist")
         return when (rated) {
             is Rated -> rated.value?.div(2)?.toInt() ?: 0
             else -> 0

@@ -12,28 +12,13 @@ class MovieDetailScreenModel(
     private val repository: MovieDetailScreenRepository,
 ) : ViewModel() {
 
-
     var movieDetailUiState = MutableStateFlow(MovieDetailUiState())
         private set
 
     fun fetchInitialMovieDetailData(movieId: String) {
         viewModelScope.launch {
-            movieDetailUseCase(movieId).collectLatest { detail ->
-                movieDetailUiState.update {
-                    it.copy(
-                        apiState = detail.apiState,
-                        movieDetail = detail.movieDetail,
-                        sessionId = detail.sessionId,
-                        accountId = detail.accountId,
-                        releaseYear = detail.releaseYear,
-                        certification = detail.certification,
-                        overviewPairs = detail.overviewPairs,
-                        rating = detail.rating,
-                        isFavorite = detail.isFavorite,
-                        shouldAddToWatchList = detail.shouldAddToWatchList,
-                        importantCrewMap = detail.importantCrewMap
-                    )
-                }
+            movieDetailUseCase(movieId).collectLatest { invokedDetailState ->
+                movieDetailUiState.value = invokedDetailState
             }
         }
     }
