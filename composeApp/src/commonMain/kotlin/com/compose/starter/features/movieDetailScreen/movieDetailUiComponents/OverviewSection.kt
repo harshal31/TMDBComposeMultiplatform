@@ -1,5 +1,6 @@
 package com.compose.starter.features.movieDetailScreen.movieDetailUiComponents
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.MoreVert
@@ -52,22 +54,34 @@ fun OverviewSection(
     importantCrewMap: List<Pair<String, String>>,
     overviewPairs: List<List<OverviewPair>>,
 ) {
+    if (overview.isEmpty()) {
+        return
+    }
+
     val scope = rememberCoroutineScope()
     var isBottomSheetVisible by rememberSaveable { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
 
-    MovieTitleIconSection(
-        title = Res.string.overview,
-        endIcon = Icons.Sharp.MoreVert,
-        onEndIconClick = {
-            scope.launch {
-                isBottomSheetVisible = true
-                sheetState.expand()
-            }
-        }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(horizontal = MaterialTheme.spacing.default)
+            .animateContentSize()
     ) {
+        MovieDetailTitleIcon(
+            title = stringResource(Res.string.overview),
+            endIcon = Icons.Sharp.MoreVert,
+            onEndIconClick = {
+                scope.launch {
+                    isBottomSheetVisible = true
+                    sheetState.expand()
+                }
+            }
+        )
+
         ExpandableText(
             style = MaterialTheme.typography.titleMedium,
             value = overview

@@ -1,6 +1,6 @@
 package com.compose.starter.features.settingsScreen
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 import com.compose.starter.networking.ApiState
 import com.compose.starter.networking.model.AccountDetail
 import composestarter.composeapp.generated.resources.Res
@@ -11,7 +11,7 @@ import composestarter.composeapp.generated.resources.light_theme
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
-@Stable
+@Immutable
 data class SettingScreenUiState(
     val theme: ThemeMode = ThemeMode.None,
     val apiState: ApiState = ApiState.CIRCULAR_LOADING,

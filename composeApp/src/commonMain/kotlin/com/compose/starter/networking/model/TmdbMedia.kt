@@ -1,5 +1,6 @@
 package com.compose.starter.networking.model
 
+import androidx.compose.runtime.Immutable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -103,6 +104,8 @@ data class KnownFor(
     val voteCount: Int? = null, // 32495
 )
 
+@Serializable
+@Immutable
 data class TmdbMediaData(
     val imageUrl: String?,
     val mediaId: String?,

@@ -9,24 +9,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import com.compose.starter.networking.model.Keyword
+import com.compose.starter.networking.model.MappedKeyword
 import com.compose.starter.spacingsAndBorders.spacing
-import composestarter.composeapp.generated.resources.Res
-import composestarter.composeapp.generated.resources.keywords
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun KeywordsSection(keywords: List<Keyword>) {
-    MovieTitleIconSection(
-        title = Res.string.keywords,
-        isEndSection = true
+fun KeywordsFlowRow(keywords: List<MappedKeyword>) {
+    FlowRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = MaterialTheme.spacing.default),
     ) {
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            keywords.forEach {
+        keywords.forEach {
+            key(it.id) {
                 SuggestionChip(
                     modifier = Modifier
                         .wrapContentWidth()
@@ -34,7 +32,7 @@ fun KeywordsSection(keywords: List<Keyword>) {
                     onClick = {},
                     label = {
                         Text(
-                            it.name ?: "-",
+                            it.name,
                             style = MaterialTheme.typography.labelMedium,
                             textAlign = TextAlign.Center,
                         )

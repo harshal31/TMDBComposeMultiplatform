@@ -8,11 +8,8 @@ import coil3.request.crossfade
 import coil3.util.DebugLogger
 import com.compose.starter.appInitializations.AppBuildInfo
 import com.compose.starter.appInitializations.AppLevelViewModel
-import com.compose.starter.features.homeScreen.HomeScreenViewModel
 import com.compose.starter.features.loginScreen.LoginScreenRepository
 import com.compose.starter.features.loginScreen.LoginScreenViewModel
-import com.compose.starter.features.moreDataScreen.MoreDataScreenRepository
-import com.compose.starter.features.moreDataScreen.MoreDataScreenViewModel
 import com.compose.starter.features.movieDetailScreen.MovieDetailScreenModel
 import com.compose.starter.features.movieDetailScreen.MovieDetailScreenRepository
 import com.compose.starter.features.movieDetailScreen.MovieDetailScreenUseCase
@@ -44,35 +41,48 @@ fun appLevelBuildInfo(
 }
 
 private val repoConstructorParamModules = module {
-    single<NetworkManager> { NetworkManager(get(), get()) }
-    single<LocalStore> { LocalStore(get()) }
+    single<NetworkManager> { NetworkManager(httpClientEngine = get(), buildInfo = get()) }
+    single<LocalStore> { LocalStore(store = get()) }
     single<ShareMediaData> { ShareMediaData() }
 }
 
 private val repoModules = module {
-    factory<LoginScreenRepository> { LoginScreenRepository(get(), get()) }
-    factory<MoviesScreenRepository> { MoviesScreenRepository(get()) }
-    factory<TvSeriesScreenRepository> { TvSeriesScreenRepository(get()) }
-    factory<SettingsScreenRepository> { SettingsScreenRepository(get(), get()) }
-    factory<PeopleScreenRepository> { PeopleScreenRepository(get()) }
-    factory<MoreDataScreenRepository> { MoreDataScreenRepository(get()) }
-    factory<MovieDetailScreenRepository> { MovieDetailScreenRepository(get(), get()) }
+    factory<LoginScreenRepository> { LoginScreenRepository(network = get(), store = get()) }
+    factory<MoviesScreenRepository> { MoviesScreenRepository(network = get()) }
+    factory<TvSeriesScreenRepository> { TvSeriesScreenRepository(network = get()) }
+    factory<SettingsScreenRepository> { SettingsScreenRepository(network = get(), store = get()) }
+    factory<PeopleScreenRepository> { PeopleScreenRepository(network = get()) }
+    factory<MovieDetailScreenRepository> {
+        MovieDetailScreenRepository(
+            network = get(),
+            store = get()
+        )
+    }
 }
 
 private val useCaseModules = module {
-    factory { MovieDetailScreenUseCase(get(), get()) }
+    factory {
+        MovieDetailScreenUseCase(
+            movieDetailRepo = get(),
+            settingRepo = get(),
+            shareMediaData = get()
+        )
+    }
 }
 
 private val viewModelModules = module {
-    viewModel<LoginScreenViewModel> { LoginScreenViewModel(get()) }
-    viewModel<HomeScreenViewModel> { HomeScreenViewModel() }
-    viewModel<MoviesScreenViewModel> { MoviesScreenViewModel(get()) }
-    viewModel<TvSeriesScreenViewModel> { TvSeriesScreenViewModel(get()) }
-    viewModel<SettingsScreenViewModel> { SettingsScreenViewModel(get()) }
-    viewModel<AppLevelViewModel> { AppLevelViewModel(get()) }
-    viewModel<PeopleScreenViewModel> { PeopleScreenViewModel(get()) }
-    viewModel<MoreDataScreenViewModel> { MoreDataScreenViewModel(get()) }
-    viewModel<MovieDetailScreenModel> { MovieDetailScreenModel(get(), get()) }
+    viewModel<LoginScreenViewModel> { LoginScreenViewModel(repository = get()) }
+    viewModel<MoviesScreenViewModel> { MoviesScreenViewModel(repository = get()) }
+    viewModel<TvSeriesScreenViewModel> { TvSeriesScreenViewModel(repository = get()) }
+    viewModel<SettingsScreenViewModel> { SettingsScreenViewModel(repository = get()) }
+    viewModel<AppLevelViewModel> { AppLevelViewModel(store = get()) }
+    viewModel<PeopleScreenViewModel> { PeopleScreenViewModel(repository = get()) }
+    viewModel<MovieDetailScreenModel> {
+        MovieDetailScreenModel(
+            movieDetailUseCase = get(),
+            repository = get(),
+        )
+    }
 }
 
 
@@ -101,7 +111,8 @@ fun imageLoader(context: PlatformContext, shouldEnableLogs: Boolean = true): Ima
         .diskCache {
             DiskCache.Builder()
                 .directory(FileSystem.SYSTEM_TEMPORARY_DIRECTORY / "image_cache")
-                .maxSizeBytes(512L * 1024 * 1024).build()
+                .maxSizeBytes(512L * 1024 * 1024)
+                .build()
         }
         .diskCachePolicy(CachePolicy.ENABLED)
         .build()

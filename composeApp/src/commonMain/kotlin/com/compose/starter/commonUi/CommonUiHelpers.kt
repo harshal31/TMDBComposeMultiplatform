@@ -41,33 +41,7 @@ import composestarter.composeapp.generated.resources.more
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-
-
-fun LazyListScope.itemVisibility(
-    key: Any? = null,
-    value: Any? = null,
-    content: @Composable () -> Unit,
-) {
-    if (value != null) {
-        item(key = key) {
-            content
-        }
-    }
-}
-
-
-fun <T> LazyListScope.listItemVisibility(
-    key: Any? = null,
-    value: List<T>? = emptyList(),
-    content: @Composable (List<T>) -> Unit,
-) {
-    if (value!!.isNotEmpty()) {
-        item(key = key) {
-            content(value)
-        }
-    }
-}
-
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 fun LazyListScope.stringItemVisibility(
     key: Any? = null,
@@ -92,8 +66,9 @@ fun LazyListScope.pairItemVisibility(
 
 
 @Composable
+@Preview
 fun CircleIcon(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.size(MaterialTheme.sizing.giant),
     icon: DrawableResource,
     contentDesc: String = "",
     tint: Color = Color.White,
@@ -102,13 +77,14 @@ fun CircleIcon(
     Box(
         modifier = Modifier
             .then(modifier)
-            .size(MaterialTheme.sizing.giant)
             .background(
                 Color.Black.copy(
                     alpha = 0.5f
                 ),
                 shape = MaterialTheme.circleBorder.extraLarge
-            ),
+            ).clickable {
+                onIconClick()
+            },
         contentAlignment = Alignment.Center
     ) {
         IconButton(

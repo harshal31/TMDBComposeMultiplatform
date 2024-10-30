@@ -1,14 +1,9 @@
 package com.compose.starter.features.homeScreen
 
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.Immutable
 
-sealed interface HomeScreenEvent {
-    data object HideAppBar : HomeScreenEvent
-    data object ShowAppBar : HomeScreenEvent
-    data class UpdateStatusColor(val statusBarColor: Color?) : HomeScreenEvent
-}
-
+@Immutable
 data class HomeScreenState(
     val shouldDisplayAppBar: Boolean = true,
-    val statusBarColor: Color? = null,
+    val shouldDisplayBottomBar: Boolean = true,
 )

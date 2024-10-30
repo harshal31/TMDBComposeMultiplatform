@@ -2,7 +2,6 @@ package com.compose.starter.features.movieDetailScreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.MoreVert
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,20 +24,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.compose.starter.commonUi.CircleIcon
 import com.compose.starter.commonUi.CleanContent
-import com.compose.starter.commonUi.listItemVisibility
-import com.compose.starter.commonUi.stringItemVisibility
+import com.compose.starter.commonUi.TmdbDivider
+import com.compose.starter.commonUi.statusNavModifier
 import com.compose.starter.constants.ContentDescription
-import com.compose.starter.di.ShareMediaData
-import com.compose.starter.features.homeScreen.HomeScreenEvent
-import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.KeywordsSection
+import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.FeaturedCastRow
+import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.KeywordsFlowRow
 import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.MediaSection
 import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.MovieDetailInformation
+import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.MovieDetailTitleIcon
 import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.OverviewSection
-import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.RecommendationsSection
-import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.ReviewSection
-import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.SimilarSection
-import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.TopBilledCastsSection
-import com.compose.starter.navGraphs.MovieNavigation
+import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.RecommendedLazyRow
+import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.ReviewCard
+import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.SimilarLazyRow
+import com.compose.starter.navGraphs.Movie
 import com.compose.starter.networking.Parameter
 import com.compose.starter.spacingsAndBorders.spacing
 import com.compose.starter.theme.mediaDetailFillColor
@@ -43,142 +44,226 @@ import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.arrow_back
 import composestarter.composeapp.generated.resources.fav_filled
 import composestarter.composeapp.generated.resources.fav_unfilled
-import org.koin.compose.koinInject
+import composestarter.composeapp.generated.resources.featured_casts
+import composestarter.composeapp.generated.resources.keywords
+import composestarter.composeapp.generated.resources.recommendations
+import composestarter.composeapp.generated.resources.reviews
+import composestarter.composeapp.generated.resources.similar
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MovieDetailScreen(
-    padding: PaddingValues,
     id: String,
     viewModel: MovieDetailScreenModel,
-    navigateToDetail: (MovieNavigation) -> Unit,
-    onEvent: (HomeScreenEvent) -> Unit,
-    onStatusBarColorChange: (Color?) -> Unit,
+    navigateToDetail: (Movie) -> Unit,
     onBack: () -> Unit,
 ) {
-    val uiState by viewModel.mediaDetailUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.movieDetailUiState.collectAsStateWithLifecycle()
     var dominantColor by remember { mutableStateOf<Color?>(null) }
-    val shareMediaData = koinInject<ShareMediaData>()
 
     LaunchedEffect(Unit) {
-        onEvent(HomeScreenEvent.HideAppBar)
         viewModel.fetchInitialMovieDetailData(id)
     }
 
-    LaunchedEffect(dominantColor) {
-        onStatusBarColorChange(dominantColor)
-    }
-
-    LaunchedEffect(uiState.movieDetail?.id) {
-        shareMediaData.updateMovieState(uiState)
-    }
-
-    CleanContent(
-        padding = padding,
-        apiState = uiState.apiState,
-        onBack = onBack,
-        onRetry = { viewModel.fetchInitialMovieDetailData(id) }
-    ) { pad ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(pad)
-            ) {
-                item(
-                    key = 0
+    Scaffold(
+        modifier = statusNavModifier(statusBarColor = dominantColor)
+    ) { padding ->
+        CleanContent(
+            padding = padding,
+            apiState = uiState.apiState,
+            onBack = onBack,
+            onRetry = { viewModel.fetchInitialMovieDetailData(id) }
+        ) { pad ->
+            Box(modifier = Modifier.fillMaxSize()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(pad)
                 ) {
-                    MovieDetailInformation(
-                        mediaDetail = uiState.movieDetail,
-                        rating = uiState.rating,
-                        certification = uiState.certification,
-                        releaseYear = uiState.releaseYear,
-                        shouldAddToWatchList = uiState.shouldAddToWatchList,
-                        sessionId = uiState.sessionId,
-                        accountId = uiState.accountId,
-                        onEvent = viewModel::onEvent,
-                        onDominantColor = {
-                            dominantColor = it
-                        }
-                    )
-                }
-
-                item(
-                    key = 1
-                ) {
-                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-                }
-
-                stringItemVisibility(
-                    key = 2,
-                    value = uiState.movieDetail?.overview
-                ) {
-                    OverviewSection(
-                        title = uiState.movieDetail?.title,
-                        overview = it,
-                        posterPath = uiState.movieDetail?.backdropPath,
-                        importantCrewMap = uiState.importantCrewMap,
-                        overviewPairs = uiState.overviewPairs
-                    )
-                }
-
-                item(key = 3) {
-                    MediaSection(
-                        uiState.movieDetail?.videos?.results,
-                        uiState.movieDetail?.images?.posters,
-                        uiState.movieDetail?.images?.backdrops,
+                    item(
+                        key = uiState.movieDetail.hashCode()
                     ) {
+                        MovieDetailInformation(
+                            mediaDetail = uiState.movieDetail,
+                            rating = uiState.rating,
+                            certification = uiState.certification,
+                            releaseYear = uiState.releaseYear,
+                            shouldAddToWatchList = uiState.shouldAddToWatchList,
+                            sessionId = uiState.sessionId,
+                            accountId = uiState.accountId,
+                            onEvent = viewModel::onEvent,
+                            onDominantColor = {
+                                dominantColor = it
+                            }
+                        )
+                    }
 
+                    item {
+                        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                    }
+
+                    item(
+                        key = uiState.movieDetail?.overview.hashCode(),
+                    ) {
+                        OverviewSection(
+                            title = uiState.movieDetail?.title,
+                            overview = uiState.movieDetail?.overview ?: "",
+                            posterPath = uiState.movieDetail?.backdropPath,
+                            importantCrewMap = uiState.importantCrewMap,
+                            overviewPairs = uiState.overviewPairs
+                        )
+                    }
+
+                    item {
+                        TmdbDivider(
+                            modifier = Modifier
+                                .padding(
+                                    vertical = MaterialTheme.spacing.small,
+                                    horizontal = MaterialTheme.spacing.default
+                                ),
+                            isVertical = false,
+                        )
+                    }
+
+                    if (uiState.movieDetail?.videos.isNullOrEmpty().not() || uiState.movieDetail?.images.isNullOrEmpty().not() || uiState.movieDetail?.backdrops.isNullOrEmpty().not()) {
+                        item(key = uiState.movieDetail?.videos.hashCode()) {
+                            MediaSection(
+                                uiState.movieDetail?.videos,
+                                uiState.movieDetail?.images,
+                                uiState.movieDetail?.backdrops,
+                            ) {
+
+                            }
+                        }
+                    }
+
+                    if ((uiState.movieDetail?.casts ?: emptyList()).isNotEmpty()) {
+                        item {
+                            MovieDetailTitleIcon(
+                                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
+                                title = stringResource(Res.string.featured_casts),
+                                endIcon = Icons.Sharp.MoreVert,
+                                onEndIconClick = {
+                                    navigateToDetail(Movie.CastAndCrewListScreen)
+                                }
+                            )
+                        }
+
+                        item {
+                            FeaturedCastRow(
+                                uiState.movieDetail?.casts ?: emptyList(),
+                                navigateToDetail
+                            )
+                        }
+
+                        item {
+                            TmdbDivider(
+                                modifier = Modifier
+                                    .padding(vertical = MaterialTheme.spacing.small)
+                                    .padding(horizontal = MaterialTheme.spacing.default),
+                                isVertical = false,
+                            )
+                        }
+                    }
+
+                    if ((uiState.movieDetail?.reviews ?: emptyList()).isNotEmpty()) {
+                        item {
+                            MovieDetailTitleIcon(
+                                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
+                                title = stringResource(Res.string.reviews),
+                                endIcon = Icons.Sharp.MoreVert,
+                            )
+                        }
+
+                        item(
+                            key = uiState.movieDetail?.reviews.hashCode()
+                        ) {
+                            ReviewCard(uiState.movieDetail?.reviews?.first()!!)
+                        }
+
+                        item {
+                            TmdbDivider(
+                                modifier = Modifier
+                                    .padding(vertical = MaterialTheme.spacing.small)
+                                    .padding(horizontal = MaterialTheme.spacing.default),
+                                isVertical = false,
+                            )
+                        }
+                    }
+
+                    if ((uiState.movieDetail?.recommendations ?: emptyList()).isNotEmpty()) {
+                        item {
+                            MovieDetailTitleIcon(
+                                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
+                                title = stringResource(Res.string.recommendations),
+                                endIcon = Icons.Sharp.MoreVert,
+                            )
+                        }
+
+                        item {
+                            RecommendedLazyRow(uiState.movieDetail?.recommendations!!)
+                        }
+                        item {
+                            TmdbDivider(
+                                modifier = Modifier
+                                    .padding(vertical = MaterialTheme.spacing.small)
+                                    .padding(horizontal = MaterialTheme.spacing.default),
+                                isVertical = false,
+                            )
+                        }
+                    }
+
+
+                    if ((uiState.movieDetail?.similarList ?: emptyList()).isNotEmpty()) {
+                        item {
+                            MovieDetailTitleIcon(
+                                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
+                                title = stringResource(Res.string.similar),
+                                endIcon = Icons.Sharp.MoreVert,
+                            )
+                        }
+
+                        item {
+                            SimilarLazyRow(uiState.movieDetail?.similarList!!)
+                        }
+
+                        item {
+                            TmdbDivider(
+                                modifier = Modifier
+                                    .padding(vertical = MaterialTheme.spacing.small)
+                                    .padding(horizontal = MaterialTheme.spacing.default),
+                                isVertical = false,
+                            )
+                        }
+                    }
+
+                    if ((uiState.movieDetail?.keywords ?: emptyList()).isNotEmpty()) {
+                        item {
+                            MovieDetailTitleIcon(
+                                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
+                                title = stringResource(Res.string.keywords),
+                                endIcon = Icons.Sharp.MoreVert,
+                            )
+                        }
+
+                        item {
+                            KeywordsFlowRow(uiState.movieDetail?.keywords!!)
+                        }
                     }
                 }
 
-                listItemVisibility(
-                    key = 4,
-                    value = uiState.movieDetail?.credits?.cast
-                ) {
-                    TopBilledCastsSection(
-                        casts = it.take(9),
-                        navigateToDetail = navigateToDetail
-                    )
-                }
-
-                listItemVisibility(
-                    key = 5,
-                    value = uiState.movieDetail?.reviews?.results
-                ) {
-                    ReviewSection(it.first())
-                }
-
-                listItemVisibility(
-                    key = 6,
-                    value = uiState.movieDetail?.recommendations?.results
-                ) {
-                    RecommendationsSection(it)
-                }
-
-                listItemVisibility(
-                    key = 7,
-                    value = uiState.movieDetail?.similar?.results
-                ) {
-                    SimilarSection(it)
-                }
-
-                listItemVisibility(
-                    key = 8,
-                    value = uiState.movieDetail?.keywords?.keywords
-                ) {
-                    KeywordsSection(it)
-                }
+                NavigationRow(
+                    onBack = onBack,
+                    mediaId = uiState.movieDetail?.id.toString(),
+                    sessionId = uiState.sessionId,
+                    accountId = uiState.accountId,
+                    isFavorite = uiState.isFavorite,
+                    onEvent = viewModel::onEvent
+                )
             }
-            NavigationRow(
-                onBack = onBack,
-                mediaId = uiState.movieDetail?.id.toString(),
-                sessionId = uiState.sessionId,
-                accountId = uiState.accountId,
-                isFavorite = uiState.isFavorite,
-                onEvent = viewModel::onEvent
-            )
         }
     }
+
 }
 
 @Composable

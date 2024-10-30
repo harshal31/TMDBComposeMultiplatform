@@ -12,13 +12,14 @@ class MovieDetailScreenModel(
     private val repository: MovieDetailScreenRepository,
 ) : ViewModel() {
 
-    var mediaDetailUiState = MutableStateFlow(MediaDetailUiState())
+
+    var movieDetailUiState = MutableStateFlow(MovieDetailUiState())
         private set
 
     fun fetchInitialMovieDetailData(movieId: String) {
         viewModelScope.launch {
             movieDetailUseCase(movieId).collectLatest { detail ->
-                mediaDetailUiState.update {
+                movieDetailUiState.update {
                     it.copy(
                         apiState = detail.apiState,
                         movieDetail = detail.movieDetail,
@@ -54,7 +55,7 @@ class MovieDetailScreenModel(
                 accountId = event.accountId,
                 isFavorite = event.isFavorite
             ).collectLatest {
-                mediaDetailUiState.update {
+                movieDetailUiState.update {
                     it.copy(isFavorite = event.isFavorite)
                 }
             }
@@ -70,7 +71,7 @@ class MovieDetailScreenModel(
                 accountId = event.accountId,
                 shouldAddToWatchList = event.shouldAdd
             ).collectLatest {
-                mediaDetailUiState.update {
+                movieDetailUiState.update {
                     it.copy(shouldAddToWatchList = event.shouldAdd)
                 }
             }
@@ -84,7 +85,7 @@ class MovieDetailScreenModel(
                 movieId = event.mediaId ?: "",
                 sessionId = event.sessionId,
             ).collectLatest { isSuccess ->
-                mediaDetailUiState.update {
+                movieDetailUiState.update {
                     it.copy(rating = if (isSuccess) event.rating else it.rating)
                 }
             }

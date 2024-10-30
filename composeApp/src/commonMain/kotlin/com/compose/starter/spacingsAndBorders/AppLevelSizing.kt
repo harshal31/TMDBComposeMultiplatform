@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 private data object SizingDefaults {
+    const val NONE = 0
     const val NANO = 1
     const val TINY = 2
     const val SMALL = 4
@@ -16,11 +17,13 @@ private data object SizingDefaults {
     const val EXTRA_LARGE = 30
     const val GIANT = 40
     const val MASSIVE = 50
+    const val ONE_FORTY = 140
     const val LARGE_TILE_WIDTH = 150
     const val LARGE_TILE_HEIGHT = 225
     const val LARGE_IMAGE_SIZE = 130
     const val MEDIUM_IMAGE_SIZE = 110
     const val FIFTY_FIVE = 55
+    const val TWENTY = 20
     const val TWO_HUNDRED = 200
     const val THREE_HUNDRED = 300
     const val TWO_FIFTY = 250
@@ -36,6 +39,7 @@ private data object SizingDefaults {
 }
 
 data class Sizing(
+    val none: Dp = SizingDefaults.NONE.dp,
     val nano: Dp = SizingDefaults.NANO.dp,
     val tiny: Dp = SizingDefaults.TINY.dp,
     val small: Dp = SizingDefaults.SMALL.dp,
@@ -61,6 +65,8 @@ data class Sizing(
     val oneSixty: Dp = SizingDefaults.ONE_SIXTY.dp,
     val sixty: Dp = SizingDefaults.SIXTY.dp,
     val eighty: Dp = SizingDefaults.EIGHTY.dp,
+    val oneForty: Dp = SizingDefaults.ONE_FORTY.dp,
+    val twenty: Dp = SizingDefaults.TWENTY.dp
 )
 
 val LocalSizing = compositionLocalOf { Sizing() }

@@ -61,5 +61,18 @@
     <string name="videos">Videos</string>
     <string name="backdrops">Backdrops</string>
     <string name="posters">Posters</string>
+    <string name="cast">Cast</string>
+    <string name="crew">Crew</string>
+
+
+    <plurals name="cast">
+        <item quantity="one">Cast</item>
+        <item quantity="other">Casts (%1$d)</item>
+    </plurals>
+
+    <plurals name="crew">
+        <item quantity="one">Crew</item>
+        <item quantity="other">Crews (%1$d)</item>
+    </plurals>
 
 </resources>

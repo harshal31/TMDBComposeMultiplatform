@@ -1,12 +1,14 @@
 package com.compose.starter.features.movieDetailScreen
 
+import androidx.compose.runtime.Immutable
 import com.compose.starter.networking.ApiState
-import com.compose.starter.networking.model.TmdbMediaDetail
+import com.compose.starter.networking.model.MappedMovieDetail
 import org.jetbrains.compose.resources.StringResource
 
-data class MediaDetailUiState(
+@Immutable
+data class MovieDetailUiState(
     val apiState: ApiState = ApiState.HORIZONTAL_LOADING,
-    val movieDetail: TmdbMediaDetail? = null,
+    val movieDetail: MappedMovieDetail? = null,
     val certification: String? = null,
     val releaseYear: String? = null,
     val sessionId: String? = "",
@@ -43,6 +45,7 @@ sealed interface MediaDetailUiEvent {
     ) : MediaDetailUiEvent
 }
 
+@Immutable
 data class OverviewPair(
     val title: StringResource,
     val value: String?,

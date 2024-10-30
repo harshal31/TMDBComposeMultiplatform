@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
@@ -30,16 +29,43 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun TmdbHeaderTitleWithLazyRow(
-    headerTitle: StringResource,
+fun HeaderListValue(
     values: List<TmdbMediaData>,
-    goToMoreScreen: (String) -> Unit,
-    onItemClick: (String) -> Unit,
+    onItemClick: (String) -> Unit
+) {
+    LazyRow(
+        modifier = Modifier.height(MaterialTheme.sizing.largeTileHeight),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+    ) {
+        items(
+            values,
+            key = { it.mediaId ?: 0 }
+        ) {
+            OutlinedCard(
+                onClick = {
+                    onItemClick(it.mediaId ?: "")
+                }
+            ) {
+                CoilCropSizeImage(
+                    modifier = Modifier.size(
+                        MaterialTheme.sizing.largeTileWidth,
+                        MaterialTheme.sizing.largeTileHeight,
+                    ),
+                    url = it.imageUrl ?: "",
+                    contentScale = ContentScale.FillHeight
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun HeaderTitle(
+    headerTitle: StringResource,
+    goToMoreScreen: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
     ) {
         Row(
@@ -63,31 +89,6 @@ fun TmdbHeaderTitleWithLazyRow(
                     modifier = Modifier.size(MaterialTheme.sizing.large),
                     contentDescription = ContentDescription.MOVE_TO_NEXT,
                 )
-            }
-        }
-
-        LazyRow(
-            modifier = Modifier.height(MaterialTheme.sizing.largeTileHeight),
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
-        ) {
-            items(
-                values,
-                key = { it.mediaId ?: 0 }
-            ) {
-                OutlinedCard(
-                    onClick = {
-                        onItemClick(it.mediaId ?: "")
-                    }
-                ) {
-                    TmdbCropSizeImage(
-                        modifier = Modifier.size(
-                            MaterialTheme.sizing.largeTileWidth,
-                            MaterialTheme.sizing.largeTileHeight,
-                        ),
-                        url = it.imageUrl ?: "",
-                        contentScale = ContentScale.FillHeight
-                    )
-                }
             }
         }
     }

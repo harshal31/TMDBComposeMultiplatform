@@ -55,7 +55,9 @@ fun TmdbPosterBottomSheet(
                 )
             },
             contentColor = MaterialTheme.colorScheme.onSurface,
-            windowInsets = WindowInsets(0, 0, 0, 0)
+            contentWindowInsets = {
+                WindowInsets(0, 0, 0, 0)
+            }
         ) {
             Box(
                 modifier = Modifier
@@ -74,7 +76,7 @@ fun TmdbPosterBottomSheet(
                     contentAlignment = Alignment.Center
                 ) {
                     posterPath?.let {
-                        TmdbCropSizeImage(
+                        CoilCropSizeImage(
                             modifier = Modifier
                                 .width(imageWidth)
                                 .height(imageHeight),

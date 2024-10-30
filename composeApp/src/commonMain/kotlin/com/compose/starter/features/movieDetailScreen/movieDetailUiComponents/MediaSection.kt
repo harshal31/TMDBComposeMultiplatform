@@ -1,6 +1,6 @@
 package com.compose.starter.features.movieDetailScreen.movieDetailUiComponents
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,17 +37,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import com.compose.starter.commonUi.CircleIcon
+import com.compose.starter.commonUi.CoilCropSizeImage
 import com.compose.starter.commonUi.CoilImage
-import com.compose.starter.commonUi.TmdbCropSizeImage
+import com.compose.starter.commonUi.TmdbDivider
 import com.compose.starter.constants.AppConstants
 import com.compose.starter.constants.ContentDescription
-import com.compose.starter.networking.model.Backdrop
-import com.compose.starter.networking.model.ImagePoster
-import com.compose.starter.networking.model.ResultVideos
+import com.compose.starter.networking.model.MappedBackdrops
+import com.compose.starter.networking.model.MappedImagePoster
+import com.compose.starter.networking.model.MappedVideo
 import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
 import com.compose.starter.theme.mediaDetailFillColor
-import com.compose.starter.utilities.formatDate
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.backdrops
 import composestarter.composeapp.generated.resources.media
@@ -56,12 +57,11 @@ import composestarter.composeapp.generated.resources.videos
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MediaSection(
-    videos: List<ResultVideos>?,
-    posters: List<ImagePoster>?,
-    backdrops: List<Backdrop>?,
+    videos: List<MappedVideo>?,
+    posters: List<MappedImagePoster>?,
+    backdrops: List<MappedBackdrops>?,
     onTabItemDataClick: (TabItemDataClick) -> Unit,
 ) {
     val tabs = listOf(
@@ -93,36 +93,42 @@ fun MediaSection(
         }
     }
 
-    MovieTitleIconSection(
-        title = Res.string.media,
-        endIcon = Icons.Sharp.MoreVert,
-        onEndIconClick = {
-            when (val pos = tabs[currentTabIndex].pos) {
-                0 -> onTabItemDataClick(
-                    TabItemDataClick.TabVideos(
-                        clickItemPos = pos,
-                        videos = videos ?: emptyList()
-                    )
-                )
-
-                1 -> onTabItemDataClick(
-                    TabItemDataClick.TabPosters(
-                        clickItemPos = pos,
-                        posters = posters ?: emptyList()
-                    )
-                )
-
-                2 -> onTabItemDataClick(
-                    TabItemDataClick.TabBackdrops(
-                        clickItemPos = pos,
-                        backdrops = backdrops ?: emptyList()
-                    )
-                )
-
-                else -> {}
-            }
-        }
+    Column(
+        modifier = Modifier
+            .wrapContentHeight()
+            .padding(MaterialTheme.spacing.default),
     ) {
+        MovieDetailTitleIcon(
+            title = stringResource(Res.string.media),
+            endIcon = Icons.Sharp.MoreVert,
+            onEndIconClick = {
+                when (val pos = tabs[currentTabIndex].pos) {
+                    0 -> onTabItemDataClick(
+                        TabItemDataClick.TabVideos(
+                            clickItemPos = pos,
+                            videos = videos ?: emptyList()
+                        )
+                    )
+
+                    1 -> onTabItemDataClick(
+                        TabItemDataClick.TabPosters(
+                            clickItemPos = pos,
+                            posters = posters ?: emptyList()
+                        )
+                    )
+
+                    2 -> onTabItemDataClick(
+                        TabItemDataClick.TabBackdrops(
+                            clickItemPos = pos,
+                            backdrops = backdrops ?: emptyList()
+                        )
+                    )
+
+                    else -> {}
+                }
+            }
+        )
+
         TabRow(selectedTabIndex = currentTabIndex) {
             tabs.forEachIndexed { index, tabItem ->
                 Tab(
@@ -142,12 +148,14 @@ fun MediaSection(
                 )
             }
         }
+
         HorizontalPager(
             state = pagerState,
+            userScrollEnabled = false,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(top = MaterialTheme.spacing.small)
+                .padding(top = MaterialTheme.spacing.extraSmall)
         ) {
             when (tabs[currentTabIndex].pos) {
                 0 -> MediaVideos(videos ?: emptyList())
@@ -156,11 +164,16 @@ fun MediaSection(
                 else -> {}
             }
         }
+
+        TmdbDivider(
+            modifier = Modifier.padding(vertical = MaterialTheme.spacing.small),
+            isVertical = false,
+        )
     }
 }
 
 @Composable
-private fun MediaVideos(results: List<ResultVideos>) {
+private fun MediaVideos(results: List<MappedVideo>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -168,129 +181,133 @@ private fun MediaVideos(results: List<ResultVideos>) {
             .horizontalScroll(rememberScrollState()),
     ) {
         results.take(9).forEach {
-            Column(
-                modifier = Modifier.fillMaxHeight().padding(end = MaterialTheme.spacing.medium)
-            ) {
-                Box(
+            key(it.key) {
+                Column(
                     modifier = Modifier
-                        .size(
-                            width = MaterialTheme.sizing.twoSeventy,
-                            height = MaterialTheme.sizing.largeTileWidth
-                        ),
-                    contentAlignment = Alignment.Center
+                    .fillMaxHeight()
+                    .padding(end = MaterialTheme.spacing.medium)
                 ) {
-                    OutlinedCard(
+                    Box(
                         modifier = Modifier
                             .size(
                                 width = MaterialTheme.sizing.twoSeventy,
                                 height = MaterialTheme.sizing.largeTileWidth
-                            )
+                            ),
+                        contentAlignment = Alignment.Center
                     ) {
-                        CoilImage(
-                            modifier = Modifier.fillMaxSize(),
-                            url = AppConstants.youtubeThumbnailImage(it.key ?: ""),
-                            scale = ContentScale.FillBounds,
-                            contentDesc = ContentDescription.contentImage(it.name ?: "-")
+                        OutlinedCard(
+                            modifier = Modifier
+                                .size(
+                                    width = MaterialTheme.sizing.twoSeventy,
+                                    height = MaterialTheme.sizing.largeTileWidth
+                                )
+                        ) {
+                            CoilImage(
+                                modifier = Modifier.fillMaxSize(),
+                                url = AppConstants.youtubeThumbnailImage(it.key),
+                                scale = ContentScale.FillBounds,
+                                contentDesc = ContentDescription.contentImage(it.name)
+                            )
+                        }
+
+                        CircleIcon(
+                            icon = Res.drawable.play,
+                            contentDesc = ContentDescription.PLAY,
+                            tint = mediaDetailFillColor,
+                            onIconClick = {}
                         )
                     }
 
-                    CircleIcon(
-                        icon = Res.drawable.play,
-                        contentDesc = ContentDescription.PLAY,
-                        tint = mediaDetailFillColor,
-                        onIconClick = {}
+                    Text(
+                        it.name,
+                        maxLines = 1,
+                        modifier = Modifier
+                            .width(MaterialTheme.sizing.twoSeventy)
+                            .basicMarquee(),
+                        style = MaterialTheme.typography.titleMedium
                     )
+
+                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 }
-
-                Text(
-                    it.name ?: "-",
-                    modifier = Modifier.width(MaterialTheme.sizing.twoSeventy),
-                    style = MaterialTheme.typography.titleMedium
-                )
-
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-
-                Text(
-                    it.publishedAt.formatDate(),
-                    modifier = Modifier.width(MaterialTheme.sizing.twoSeventy),
-                    style = MaterialTheme.typography.titleMedium
-                )
             }
         }
     }
 }
 
 @Composable
-private fun MediaPosters(posters: List<ImagePoster>) {
+private fun MediaPosters(posters: List<MappedImagePoster>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
     ) {
         posters.take(9).forEach {
-            OutlinedCard(
-                modifier = Modifier
-                    .size(
-                        width = MaterialTheme.sizing.largeTileWidth,
-                        height = MaterialTheme.sizing.twoHundred
+            key(it.filePath) {
+                OutlinedCard(
+                    modifier = Modifier
+                        .size(
+                            width = MaterialTheme.sizing.largeTileWidth,
+                            height = MaterialTheme.sizing.twoHundred
+                        )
+                        .padding(MaterialTheme.spacing.small)
+                ) {
+                    CoilCropSizeImage(
+                        modifier = Modifier.fillMaxSize(),
+                        url = it.filePath,
+                        contentScale = ContentScale.Crop,
+                        contentDescription = ContentDescription.contentImage(it.filePath)
                     )
-                    .padding(MaterialTheme.spacing.small)
-            ) {
-                TmdbCropSizeImage(
-                    modifier = Modifier.fillMaxSize(),
-                    url = it.filePath ?: "",
-                    contentScale = ContentScale.Crop,
-                    contentDescription = ContentDescription.contentImage(it.iso6391 ?: "-")
-                )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun MediaBackdrops(backdrops: List<Backdrop>) {
+private fun MediaBackdrops(backdrops: List<MappedBackdrops>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
     ) {
         backdrops.take(9).forEach {
-            OutlinedCard(
-                modifier = Modifier
-                    .size(
-                        width = MaterialTheme.sizing.twoFifty,
-                        height = MaterialTheme.sizing.largeTileWidth
+            key(it.filePath) {
+                OutlinedCard(
+                    modifier = Modifier
+                        .size(
+                            width = MaterialTheme.sizing.twoFifty,
+                            height = MaterialTheme.sizing.largeTileWidth
+                        )
+                        .padding(MaterialTheme.spacing.small)
+                ) {
+                    CoilCropSizeImage(
+                        modifier = Modifier.fillMaxSize(),
+                        url = it.filePath,
+                        contentScale = ContentScale.FillBounds,
+                        contentDescription = ContentDescription.contentImage(it.filePath)
                     )
-                    .padding(MaterialTheme.spacing.small)
-            ) {
-                TmdbCropSizeImage(
-                    modifier = Modifier.fillMaxSize(),
-                    url = it.filePath ?: "",
-                    contentScale = ContentScale.FillBounds,
-                    contentDescription = ContentDescription.contentImage(it.iso6391 ?: "-")
-                )
+                }
             }
         }
     }
-
 }
 
 sealed interface TabItemDataClick {
     data class TabVideos(
         val clickItemPos: Int,
-        val videos: List<ResultVideos>,
+        val videos: List<MappedVideo>,
         val type: String = "Videos",
     ) : TabItemDataClick
 
     data class TabPosters(
         val clickItemPos: Int,
-        val posters: List<ImagePoster>,
+        val posters: List<MappedImagePoster>,
         val type: String = "Posters",
     ) : TabItemDataClick
 
     data class TabBackdrops(
         val clickItemPos: Int,
-        val backdrops: List<Backdrop>,
+        val backdrops: List<MappedBackdrops>,
         val type: String = "Backdrops",
     ) : TabItemDataClick
 }

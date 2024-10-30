@@ -1,10 +1,20 @@
 package com.compose.starter.commonUi
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.CachePolicy
@@ -14,7 +24,12 @@ import coil3.toBitmap
 import com.compose.starter.constants.AppConstants
 import com.compose.starter.constants.ContentDescription
 import com.compose.starter.platformImageRequest
+import com.compose.starter.spacingsAndBorders.circleBorder
+import com.compose.starter.spacingsAndBorders.sizing
+import com.compose.starter.theme.avatarBack
+import com.compose.starter.theme.avatarFront
 import com.compose.starter.toImageBitmap
+import com.compose.starter.utilities.secondOrNull
 import com.kmpalette.color
 import com.kmpalette.palette.graphics.Palette
 import composestarter.composeapp.generated.resources.Res
@@ -29,7 +44,7 @@ fun CoilImage(
     contentDesc: String = "",
     scale: ContentScale = ContentScale.Fit,
     placeHolder: Painter? = painterResource(Res.drawable.image_loader_placeholder),
-    errorPlaceholder: Painter? = painterResource(Res.drawable.image_error_placeholder)
+    errorPlaceholder: Painter? = painterResource(Res.drawable.image_error_placeholder),
 ) {
     AsyncImage(
         modifier = modifier,
@@ -73,7 +88,7 @@ fun DominantColorCoilImage(
 
 
 @Composable
-fun TmdbCropSizeImage(
+fun CoilCropSizeImage(
     modifier: Modifier = Modifier,
     url: String,
     contentScale: ContentScale = ContentScale.Fit,
@@ -97,12 +112,13 @@ fun TmdbCropSizeImage(
 
 
 @Composable
-fun TmdbFullSizeImage(
+fun CoilFullSizeImage(
     modifier: Modifier = Modifier,
     url: String,
     contentScale: ContentScale = ContentScale.Fit,
     contentDescription: String = "",
     placeHolder: Painter? = painterResource(Res.drawable.image_loader_placeholder),
+    errorPlaceholder: Painter? = painterResource(Res.drawable.image_error_placeholder),
 ) {
     AsyncImage(
         modifier = modifier,
@@ -114,8 +130,68 @@ fun TmdbFullSizeImage(
             .build(),
         contentDescription = ContentDescription.contentImage(contentDescription),
         placeholder = placeHolder,
-        error = painterResource(Res.drawable.image_error_placeholder),
+        error = errorPlaceholder,
         contentScale = contentScale,
     )
+
 }
 
+
+@Composable
+fun AvatarElseInitialLetter(
+    avatarUrl: String?,
+    userName: String?,
+    circleSize: Dp = MaterialTheme.sizing.largeImageSize,
+    borderWidth: Dp = MaterialTheme.sizing.twenty
+) {
+    val imageSize = circleSize.minus(borderWidth)
+    val split = userName
+        ?.split(" ")
+        ?.mapNotNull { it.uppercase().firstOrNull() }
+
+    val userInitial = (split?.firstOrNull()?.toString() ?: "").plus((split?.secondOrNull()?.toString() ?: ""))
+
+    Box(
+        modifier = Modifier
+            .size(circleSize)
+            .background(
+                color = avatarBack,
+                shape = MaterialTheme.circleBorder.extraLarge
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        avatarUrl?.let {
+            CoilImage(
+                modifier = Modifier
+                    .size(imageSize)
+                    .clip(MaterialTheme.circleBorder.extraLarge),
+                url = AppConstants.CROP_SIZE_BASE_URL + it,
+                contentDesc = ContentDescription.PROFILE_IMAGE,
+                scale = ContentScale.Crop,
+            )
+
+        } ?: run {
+            Box(
+                modifier = Modifier
+                    .size(imageSize)
+                    .background(
+                        color = avatarFront,
+                        shape = MaterialTheme.circleBorder.extraLarge
+                    )
+                    .align(Alignment.Center),
+                contentAlignment = Alignment.Center
+            ) {
+                if (userInitial.isNotEmpty()) {
+                    Text(
+                        userInitial,
+                        style = MaterialTheme.typography.displayLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = (MaterialTheme.typography.displayLarge.fontSize.value + 13f).sp
+                        ),
+                        color = Color.White
+                    )
+                }
+            }
+        }
+    }
+}

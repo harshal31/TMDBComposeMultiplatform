@@ -40,6 +40,10 @@ data class RectangularBorder(
         topEnd = BorderDefaults.MED_LARGE.dp
     ),
 
+    val bottomLevelMediumBorder: RoundedCornerShape = RoundedCornerShape(
+        bottomStart = BorderDefaults.MEDIUM.dp,
+        bottomEnd = BorderDefaults.MEDIUM.dp
+    ),
 )
 
 

@@ -1,7 +1,9 @@
 package com.compose.starter.commonUi
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,9 +21,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.compose.starter.navGraphs.Movie
+import com.compose.starter.navGraphs.Person
+import com.compose.starter.navGraphs.Setting
+import com.compose.starter.navGraphs.Tv
 import com.compose.starter.networking.model.TabBarItem
-import com.compose.starter.routes.Screen
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.movie_filled
 import composestarter.composeapp.generated.resources.movie_outlined
@@ -43,13 +49,17 @@ import org.jetbrains.compose.resources.stringResource
 fun TabView(navController: NavController) {
     val tabBarItems = bottomTabs()
     val bottomNavDestinations = listOf(
-        Screen.Graphs.MoviesGraph,
-        Screen.Graphs.TvSeriesGraph,
-        Screen.Graphs.PeoplesGraph,
-        Screen.Graphs.SettingsGraph,
+        Movie.Graph,
+        Tv.Graph,
+        Person.Graph,
+        Setting.Graph,
     )
 
-    NavigationBar {
+    NavigationBar(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+    ) {
         val entry by navController.currentBackStackEntryAsState()
         val currentDestination = entry?.destination
 
@@ -64,7 +74,9 @@ fun TabView(navController: NavController) {
                     navController.navigate(
                         tabBarItems[index].screen
                     ) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
                         restoreState = true
                         launchSingleTop = true
                     }
@@ -78,11 +90,13 @@ fun TabView(navController: NavController) {
                         badgeAmount = 0
                     )
                 },
-                label = { Text(tabBarItems[index].title) })
+                label = {
+                    Text(tabBarItems[index].title)
+                }
+            )
         }
     }
 }
-
 
 /**
  * Compose way to change navigation bar and status bar color
@@ -139,25 +153,25 @@ private fun TabBarBadgeView(count: Int? = null) {
 @Composable
 private fun bottomTabs(): List<TabBarItem> {
     val moviesTab = TabBarItem(
-        screen = Screen.Graphs.MoviesGraph,
+        screen = Movie.Graph,
         title = stringResource(Res.string.movies),
         selectedIcon = Res.drawable.movie_filled,
         unselectedIcon = Res.drawable.movie_outlined
     )
     val tvSeriesTab = TabBarItem(
-        screen = Screen.Graphs.TvSeriesGraph,
+        screen = Tv.Graph,
         title = stringResource(Res.string.tvSeries),
         selectedIcon = Res.drawable.tv_filled,
         unselectedIcon = Res.drawable.tv_outlined
     )
     val peopleTab = TabBarItem(
-        screen = Screen.Graphs.PeoplesGraph,
+        screen = Person.Graph,
         title = stringResource(Res.string.people),
         selectedIcon = Res.drawable.people_filled,
         unselectedIcon = Res.drawable.people_outline
     )
     val settingsTab = TabBarItem(
-        screen = Screen.Graphs.SettingsGraph,
+        screen = Setting.Graph,
         title = stringResource(Res.string.settings),
         selectedIcon = Res.drawable.settings_filled,
         unselectedIcon = Res.drawable.settings_outlined

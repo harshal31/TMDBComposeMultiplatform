@@ -1,10 +1,15 @@
 package com.compose.starter.utilities
 
+import androidx.compose.runtime.Composable
 import io.github.aakira.napier.Napier
 import io.ktor.util.StringValues
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.PluralStringResource
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 
 fun Map<String, Any>.toStringValues(): StringValues {
@@ -61,5 +66,20 @@ fun String?.formatDate(): String {
     } catch (t: Throwable) {
         Napier.d("date is not formatted  ${t.message}")
         ""
+    }
+}
+
+@Composable
+fun pluralResource(
+    res: Pair<StringResource, PluralStringResource>,
+    quantity: Int,
+    formatArgs: Array<Any> = emptyArray(),
+): String {
+    return if (quantity == 0) {
+        stringResource(res.first)
+    } else if (formatArgs.isEmpty()) {
+        pluralStringResource(res.second, quantity)
+    } else {
+        pluralStringResource(res.second, quantity, *formatArgs)
     }
 }
