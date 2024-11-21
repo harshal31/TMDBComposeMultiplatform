@@ -16,9 +16,11 @@ import platform.Foundation.NSLocale
 import platform.Foundation.NSNumber
 import platform.Foundation.NSNumberFormatter
 import platform.Foundation.NSNumberFormatterCurrencyStyle
+import platform.Foundation.NSURL
 import platform.Foundation.currentLocale
 import platform.Foundation.languageCode
 import platform.Foundation.localizedStringForLanguageCode
+import platform.UIKit.UIApplication
 import platform.UIKit.UIDevice
 
 class IOSPlatform : Platform {
@@ -85,4 +87,13 @@ actual fun getDisplayLanguage(locale: String?): String {
         val languageCode = nsLocale.languageCode
         NSLocale.currentLocale().localizedStringForLanguageCode(languageCode) ?: languageCode
     } ?: "-"
+}
+
+actual fun openLinkInBrowser(url: String) {
+    val nsUrl = NSURL(string = url)
+    UIApplication.sharedApplication.openURL(nsUrl, options = emptyMap<Any?, Any>()) { success ->
+        if (!success) {
+            println("Failed to open URL: $url")
+        }
+    }
 }

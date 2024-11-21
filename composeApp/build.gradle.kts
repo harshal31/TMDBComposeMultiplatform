@@ -46,6 +46,7 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.android.coroutine)
             implementation(libs.core.splashscreen)
+            implementation(libs.koin.android)
         }
 
         commonMain.dependencies {

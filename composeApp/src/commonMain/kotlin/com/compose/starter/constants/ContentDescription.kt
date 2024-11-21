@@ -17,12 +17,13 @@ object ContentDescription {
     const val INFO = "information"
     const val BOTTOM_SHEET_POSTER = "bottom_sheet_poster"
     const val PLAY = "play"
-
+    const val CLOSE = "close"
 
     private const val ADD_TO_WATCHLIST = "add_to_watchlist"
     private const val REMOVE_FROM_WATCHLIST = "remove_from_watchlist"
     private const val FAV_FILLED = "Favorite"
     private const val FAV_UN_FILLED = "Remove Favorite"
+
 
     fun contentImage(name: String): String {
         return "Content Image $name"
@@ -38,5 +39,9 @@ object ContentDescription {
 
     fun personImage(name: String): String {
         return "Person $name"
+    }
+
+    fun externalLink(link: String): String {
+        return "redirect to $link"
     }
 }

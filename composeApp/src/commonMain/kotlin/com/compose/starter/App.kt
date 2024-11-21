@@ -11,7 +11,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.setSingletonImageLoaderFactory
 import com.compose.starter.appInitializations.AppInitialData
 import com.compose.starter.appInitializations.AppLevelViewModel
@@ -35,7 +34,6 @@ import com.compose.starter.theme.TMDBTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 @Preview
 fun App(initialData: AppInitialData?) {

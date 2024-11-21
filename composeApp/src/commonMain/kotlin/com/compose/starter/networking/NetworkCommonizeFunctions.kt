@@ -1,5 +1,6 @@
 package com.compose.starter.networking
 
+import com.compose.starter.utilities.second
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
@@ -60,6 +61,7 @@ object Endpoint {
     const val WATCHLIST = "watchlist"
     const val FAVORITE = "favorite"
     const val ACCOUNT = "account"
+    const val PERSON_DETAIL = "person"
 
 
     fun discover(type: String): String {
@@ -98,6 +100,7 @@ object Parameter {
     const val FAVORITE = "favorite"
     const val WATCHLIST = "watchlist"
     const val VALUE = "value"
+    const val PERSON_ID = "person_id"
 
 
     const val LANGUAGE = "language"
@@ -143,6 +146,8 @@ object Parameter {
     const val ACCOUNT = "account"
     const val MOVIE_MEDIA_APPEND_RESPONSE =
         "credits,external_ids,images,keywords,recommendations,release_dates,reviews,similar,videos,watch_providers"
+    const val PERSON_DETAIL_APPEND_RESPONSE =
+        "images,external_ids,movie_credits,tv_credits,translations"
 
     enum class Media(val value: String) {
         MOVIE("movie"),
@@ -163,4 +168,12 @@ object DefaultParameter {
     const val POPULARITY_DESC = "popularity.desc"
     const val DAILY = "day"
     const val WEEKLY = "week"
+
+    fun defaultLanguage(delimiter: String = "-"): String {
+        return LANG_CODE.split(delimiter).first()
+    }
+
+    fun defaultCountry(delimiter: String = "-"): String {
+        return LANG_CODE.split(delimiter).second()
+    }
 }

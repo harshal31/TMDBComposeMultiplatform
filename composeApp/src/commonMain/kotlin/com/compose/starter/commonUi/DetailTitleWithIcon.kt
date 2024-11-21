@@ -1,4 +1,4 @@
-package com.compose.starter.features.movieDetailScreen.movieDetailUiComponents
+package com.compose.starter.commonUi
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,13 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import com.compose.starter.commonUi.TmdbIcon
 import com.compose.starter.constants.ContentDescription
 import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
 
 @Composable
-fun MovieDetailTitleIcon(
+fun DetailTitleWithIcon(
     modifier: Modifier = Modifier,
     title: String,
     endIcon: Any? = null,

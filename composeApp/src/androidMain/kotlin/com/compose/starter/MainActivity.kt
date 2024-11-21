@@ -9,8 +9,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.compose.starter.appInitializations.AppInitialData
 import com.compose.starter.appInitializations.AppInitialLoad
-import com.compose.starter.di.appLevelModules
-import org.koin.core.context.startKoin
 
 class MainActivity : ComponentActivity() {
 
@@ -30,10 +28,6 @@ class MainActivity : ComponentActivity() {
 
         splashScreen.setKeepOnScreenCondition {
             !isDataLoaded
-        }
-
-        startKoin {
-            appLevelModules(this@MainActivity.applicationContext, true)
         }
 
         setContent {

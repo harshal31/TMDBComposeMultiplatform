@@ -24,14 +24,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.compose.starter.commonUi.CircleIcon
 import com.compose.starter.commonUi.CleanContent
-import com.compose.starter.commonUi.TmdbDivider
+import com.compose.starter.commonUi.DetailTitleWithIcon
 import com.compose.starter.commonUi.statusNavModifier
 import com.compose.starter.constants.ContentDescription
 import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.FeaturedCastRow
 import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.KeywordsFlowRow
 import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.MediaSection
 import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.MovieDetailInformation
-import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.MovieDetailTitleIcon
 import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.OverviewSection
 import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.RecommendedLazyRow
 import com.compose.starter.features.movieDetailScreen.movieDetailUiComponents.ReviewCard
@@ -46,6 +45,7 @@ import composestarter.composeapp.generated.resources.fav_filled
 import composestarter.composeapp.generated.resources.fav_unfilled
 import composestarter.composeapp.generated.resources.featured_casts
 import composestarter.composeapp.generated.resources.keywords
+import composestarter.composeapp.generated.resources.overview_not_present
 import composestarter.composeapp.generated.resources.recommendations
 import composestarter.composeapp.generated.resources.reviews
 import composestarter.composeapp.generated.resources.similar
@@ -55,7 +55,7 @@ import org.jetbrains.compose.resources.stringResource
 fun MovieDetailScreen(
     id: String,
     viewModel: MovieDetailScreenModel,
-    navigateToDetail: (Movie) -> Unit,
+    navigate: (Movie) -> Unit,
     onBack: () -> Unit,
 ) {
     val uiState by viewModel.movieDetailUiState.collectAsStateWithLifecycle()
@@ -106,31 +106,27 @@ fun MovieDetailScreen(
                         key = uiState.movieDetail?.overview.hashCode(),
                     ) {
                         OverviewSection(
+                            modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
                             title = uiState.movieDetail?.title,
-                            overview = uiState.movieDetail?.overview ?: "",
+                            overview = uiState.movieDetail?.overview ?: stringResource(Res.string.overview_not_present),
                             posterPath = uiState.movieDetail?.backdropPath,
                             importantCrewMap = uiState.importantCrewMap,
-                            overviewPairs = uiState.overviewPairs
-                        )
-                    }
-
-                    item {
-                        TmdbDivider(
-                            modifier = Modifier
-                                .padding(
-                                    vertical = MaterialTheme.spacing.small,
-                                    horizontal = MaterialTheme.spacing.default
-                                ),
-                            isVertical = false,
+                            overviewPairs = uiState.overviewPairs,
+                            externalLinks = uiState.externalLinks,
                         )
                     }
 
                     if (uiState.movieDetail?.videos.isNullOrEmpty().not() || uiState.movieDetail?.images.isNullOrEmpty().not() || uiState.movieDetail?.backdrops.isNullOrEmpty().not()) {
+                        item {
+                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                        }
+
                         item(key = uiState.movieDetail?.videos.hashCode()) {
                             MediaSection(
-                                uiState.movieDetail?.videos,
-                                uiState.movieDetail?.images,
-                                uiState.movieDetail?.backdrops,
+                                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
+                                videos = uiState.movieDetail?.videos,
+                                posters = uiState.movieDetail?.images,
+                                backdrops = uiState.movieDetail?.backdrops,
                             ) {
 
                             }
@@ -139,36 +135,36 @@ fun MovieDetailScreen(
 
                     if ((uiState.movieDetail?.casts ?: emptyList()).isNotEmpty()) {
                         item {
-                            MovieDetailTitleIcon(
+                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                        }
+
+                        item {
+                            DetailTitleWithIcon(
                                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
                                 title = stringResource(Res.string.featured_casts),
                                 endIcon = Icons.Sharp.MoreVert,
                                 onEndIconClick = {
-                                    navigateToDetail(Movie.CastAndCrewListScreen)
+                                    navigate(Movie.CastAndCrewList)
                                 }
                             )
                         }
 
                         item {
                             FeaturedCastRow(
-                                uiState.movieDetail?.casts ?: emptyList(),
-                                navigateToDetail
-                            )
-                        }
-
-                        item {
-                            TmdbDivider(
-                                modifier = Modifier
-                                    .padding(vertical = MaterialTheme.spacing.small)
-                                    .padding(horizontal = MaterialTheme.spacing.default),
-                                isVertical = false,
+                                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
+                                casts = uiState.movieDetail?.casts ?: emptyList(),
+                                navigateToDetail = navigate
                             )
                         }
                     }
 
                     if ((uiState.movieDetail?.reviews ?: emptyList()).isNotEmpty()) {
                         item {
-                            MovieDetailTitleIcon(
+                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                        }
+
+                        item {
+                            DetailTitleWithIcon(
                                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
                                 title = stringResource(Res.string.reviews),
                                 endIcon = Icons.Sharp.MoreVert,
@@ -178,37 +174,29 @@ fun MovieDetailScreen(
                         item(
                             key = uiState.movieDetail?.reviews.hashCode()
                         ) {
-                            ReviewCard(uiState.movieDetail?.reviews?.first()!!)
-                        }
-
-                        item {
-                            TmdbDivider(
-                                modifier = Modifier
-                                    .padding(vertical = MaterialTheme.spacing.small)
-                                    .padding(horizontal = MaterialTheme.spacing.default),
-                                isVertical = false,
+                            ReviewCard(
+                                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
+                                review = uiState.movieDetail?.reviews?.first()!!
                             )
                         }
                     }
 
                     if ((uiState.movieDetail?.recommendations ?: emptyList()).isNotEmpty()) {
                         item {
-                            MovieDetailTitleIcon(
+                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                        }
+
+                        item {
+                            DetailTitleWithIcon(
                                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
-                                title = stringResource(Res.string.recommendations),
-                                endIcon = Icons.Sharp.MoreVert,
+                                title = stringResource(Res.string.recommendations)
                             )
                         }
 
                         item {
-                            RecommendedLazyRow(uiState.movieDetail?.recommendations!!)
-                        }
-                        item {
-                            TmdbDivider(
-                                modifier = Modifier
-                                    .padding(vertical = MaterialTheme.spacing.small)
-                                    .padding(horizontal = MaterialTheme.spacing.default),
-                                isVertical = false,
+                            RecommendedLazyRow(
+                                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
+                                recommendations = uiState.movieDetail?.recommendations!!
                             )
                         }
                     }
@@ -216,38 +204,45 @@ fun MovieDetailScreen(
 
                     if ((uiState.movieDetail?.similarList ?: emptyList()).isNotEmpty()) {
                         item {
-                            MovieDetailTitleIcon(
+                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                        }
+
+                        item {
+                            DetailTitleWithIcon(
                                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
-                                title = stringResource(Res.string.similar),
-                                endIcon = Icons.Sharp.MoreVert,
+                                title = stringResource(Res.string.similar)
                             )
                         }
 
                         item {
-                            SimilarLazyRow(uiState.movieDetail?.similarList!!)
-                        }
-
-                        item {
-                            TmdbDivider(
-                                modifier = Modifier
-                                    .padding(vertical = MaterialTheme.spacing.small)
-                                    .padding(horizontal = MaterialTheme.spacing.default),
-                                isVertical = false,
+                            SimilarLazyRow(
+                                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
+                                similars = uiState.movieDetail?.similarList!!
                             )
                         }
                     }
 
                     if ((uiState.movieDetail?.keywords ?: emptyList()).isNotEmpty()) {
                         item {
-                            MovieDetailTitleIcon(
+                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                        }
+
+                        item {
+                            DetailTitleWithIcon(
                                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
-                                title = stringResource(Res.string.keywords),
-                                endIcon = Icons.Sharp.MoreVert,
+                                title = stringResource(Res.string.keywords)
                             )
                         }
 
                         item {
-                            KeywordsFlowRow(uiState.movieDetail?.keywords!!)
+                            KeywordsFlowRow(
+                                modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
+                                keywords = uiState.movieDetail?.keywords!!
+                            )
+                        }
+
+                        item {
+                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                         }
                     }
                 }

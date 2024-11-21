@@ -1,7 +1,10 @@
 package com.compose.starter
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.icu.text.NumberFormat
+import android.net.Uri
 import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.ImageBitmap
@@ -15,8 +18,10 @@ import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.bitmapConfig
 import coil3.request.crossfade
+import com.compose.starter.di.getKoinValue
 import java.util.Locale
 import android.graphics.Bitmap as AndroidBitmap
+
 
 class AndroidPlatform : Platform {
     override val name: String = "Android ${Build.VERSION.SDK_INT}"
@@ -78,4 +83,11 @@ actual fun getDisplayLanguage(locale: String?): String {
     return locale?.let {
         Locale.forLanguageTag(it).displayLanguage
     } ?: "-"
+}
+
+actual fun openLinkInBrowser(url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    }
+    getKoinValue<Context>().startActivity(intent)
 }

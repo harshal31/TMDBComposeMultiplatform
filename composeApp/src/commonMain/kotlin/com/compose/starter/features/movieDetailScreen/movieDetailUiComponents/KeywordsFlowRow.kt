@@ -17,11 +17,14 @@ import com.compose.starter.spacingsAndBorders.spacing
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun KeywordsFlowRow(keywords: List<MappedKeyword>) {
+fun KeywordsFlowRow(
+    modifier: Modifier,
+    keywords: List<MappedKeyword>
+) {
     FlowRow(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = MaterialTheme.spacing.default),
+            .then(modifier),
     ) {
         keywords.forEach {
             key(it.id) {
