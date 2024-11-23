@@ -9,6 +9,7 @@ import com.compose.starter.networking.Parameter
 import com.compose.starter.networking.model.TmdbMediaData
 import com.compose.starter.utilities.fifth
 import com.compose.starter.utilities.fourth
+import com.compose.starter.utilities.immutableList
 import com.compose.starter.utilities.second
 import com.compose.starter.utilities.sixth
 import com.compose.starter.utilities.third
@@ -78,42 +79,54 @@ class TvSeriesScreenViewModel(private val repository: TvSeriesScreenRepository) 
                 _uiState.update { series ->
                     series.copy(
                         errorCode = ApiState.NONE,
-                        dailyTrendedTvSeries = result.first().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
-                        weeklyTrendingTvSeries = result.second().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
-                        popularTvSeries = result.third().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
-                        upcomingTvSeries = result.fourth().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
-                        airingToday = result.fifth().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
-                        freeToWatchTvSeries = result.sixth().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
+                        dailyTrendedTvSeries = immutableList(
+                            result.first().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
+                        weeklyTrendingTvSeries = immutableList(
+                            result.second().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
+                        popularTvSeries = immutableList(
+                            result.third().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
+                        upcomingTvSeries = immutableList(
+                            result.fourth().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
+                        airingToday = immutableList(
+                            result.fifth().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
+                        freeToWatchTvSeries = immutableList(
+                            result.sixth().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
                     )
                 }
                 return@launch

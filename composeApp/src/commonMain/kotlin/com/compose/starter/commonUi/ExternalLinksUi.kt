@@ -19,6 +19,7 @@ import com.compose.starter.constants.ContentDescription
 import com.compose.starter.openLinkInBrowser
 import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
+import com.compose.starter.utilities.ImmutableList
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.facebook
 import composestarter.composeapp.generated.resources.imdb
@@ -29,13 +30,13 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun ExternalLinksUi(links: List<ExternalLink>) {
+fun ExternalLinksUi(links: ImmutableList<ExternalLink>) {
     Row(
         modifier = Modifier.fillMaxWidth().wrapContentHeight(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        links.forEach {
+        links.items.forEach {
             val (logo, link) = it.redirect()
 
             Box(

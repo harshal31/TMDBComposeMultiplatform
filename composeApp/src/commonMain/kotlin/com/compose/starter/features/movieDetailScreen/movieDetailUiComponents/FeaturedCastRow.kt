@@ -28,11 +28,12 @@ import com.compose.starter.navGraphs.Movie
 import com.compose.starter.networking.model.MappedCast
 import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
+import com.compose.starter.utilities.ImmutableList
 
 @Composable
 fun FeaturedCastRow(
     modifier: Modifier,
-    casts: List<MappedCast>,
+    casts: ImmutableList<MappedCast>,
     navigateToDetail: (Movie) -> Unit
 ) {
     Row(
@@ -42,7 +43,7 @@ fun FeaturedCastRow(
             .height(IntrinsicSize.Max)
             .horizontalScroll(rememberScrollState())
     ) {
-        casts.forEach { cast ->
+        casts.items.forEach { cast ->
             key(cast.id) {
                 OutlinedCard(
                     modifier = Modifier

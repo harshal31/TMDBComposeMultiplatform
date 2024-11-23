@@ -3,7 +3,9 @@ package com.compose.starter.networking.model
 import androidx.compose.runtime.Immutable
 import com.compose.starter.commonUi.ExternalLink
 import com.compose.starter.networking.DefaultParameter
+import com.compose.starter.utilities.ImmutableList
 import com.compose.starter.utilities.formatDate
+import com.compose.starter.utilities.immutableList
 import io.github.aakira.napier.Napier
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -91,18 +93,17 @@ data class TmdbMediaDetail(
             overview = overview ?: "",
             backdropPath = backdropPath ?: "-",
             posterPath = posterPath ?: "",
-            genres = genres ?: emptyList(),
+            genres = immutableList(genres),
             id = id,
             voteAverage = voteAverage ?: 0.0,
-            casts = credits?.cast?.map { it.mapToMappedCast() } ?: emptyList(),
-            recommendations = recommendations?.results?.map { it.mapToMappedRecommended() }
-                ?: emptyList(),
-            similarList = similar?.results?.map { it.mapToMappedSimilar() } ?: emptyList(),
-            videos = videos?.results?.map { it.mapToMappedVideo() } ?: emptyList(),
-            images = images?.posters?.map { it.mapToMappedImages() } ?: emptyList(),
-            backdrops = images?.backdrops?.map { it.mapToMappedBackdrops() } ?: emptyList(),
-            reviews = reviews?.results?.map { it.mapToMappedReview() } ?: emptyList(),
-            keywords = keywords?.keywords?.map { it.mapToMappedKeyword() } ?: emptyList(),
+            casts = immutableList(credits?.cast?.map { it.mapToMappedCast() }),
+            recommendations = immutableList(recommendations?.results?.map { it.mapToMappedRecommended() }),
+            similarList = immutableList(similar?.results?.map { it.mapToMappedSimilar() }),
+            videos = immutableList(videos?.results?.map { it.mapToMappedVideo() }),
+            images = immutableList(images?.posters?.map { it.mapToMappedImages() }),
+            backdrops = immutableList(images?.backdrops?.map { it.mapToMappedBackdrops() }),
+            reviews = immutableList(reviews?.results?.map { it.mapToMappedReview() }),
+            keywords = immutableList(keywords?.keywords?.map { it.mapToMappedKeyword() }),
         )
     }
 }
@@ -688,23 +689,22 @@ data class MappedCrew(
 )
 
 @Immutable
-@Serializable
 data class MappedMovieDetail(
     val title: String = "",
     val overview: String = "",
     val backdropPath: String = "",
     val posterPath: String = "",
-    val genres: List<Genre> = emptyList(),
+    val genres: ImmutableList<Genre> = immutableList(),
     val id: Int? = null,
     val voteAverage: Double = 0.0,
-    val casts: List<MappedCast> = emptyList(),
-    val recommendations: List<MappedRecommended> = emptyList(),
-    val similarList: List<MappedSimilar> = emptyList(),
-    val videos: List<MappedVideo> = emptyList(),
-    val images: List<MappedImagePoster> = emptyList(),
-    val backdrops: List<MappedBackdrops> = emptyList(),
-    val reviews: List<MappedReview> = emptyList(),
-    val keywords: List<MappedKeyword> = emptyList(),
+    val casts: ImmutableList<MappedCast> = immutableList(),
+    val recommendations: ImmutableList<MappedRecommended> = immutableList(),
+    val similarList: ImmutableList<MappedSimilar> = immutableList(),
+    val videos: ImmutableList<MappedVideo> = immutableList(),
+    val images: ImmutableList<MappedImagePoster> = immutableList(),
+    val backdrops: ImmutableList<MappedBackdrops> = immutableList(),
+    val reviews: ImmutableList<MappedReview> = immutableList(),
+    val keywords: ImmutableList<MappedKeyword> = immutableList(),
 )
 
 @Immutable

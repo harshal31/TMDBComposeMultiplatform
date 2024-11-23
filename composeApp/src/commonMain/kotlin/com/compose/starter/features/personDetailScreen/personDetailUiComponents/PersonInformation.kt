@@ -28,6 +28,7 @@ import com.compose.starter.commonUi.ExternalLinksUi
 import com.compose.starter.networking.model.GenderIdentifier
 import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
+import com.compose.starter.utilities.ImmutableList
 import com.compose.starter.utilities.pluralResource
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.about
@@ -43,7 +44,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun PersonInformation(
     personName: String?,
     gender: Int?,
-    externalLinks: List<ExternalLink>
+    externalLinks: ImmutableList<ExternalLink>
 ) {
     Column(
         modifier = Modifier
@@ -70,7 +71,7 @@ fun PersonInformation(
             }
         }
 
-        if (externalLinks.isNotEmpty()) {
+        if (externalLinks.items.isNotEmpty()) {
             ExternalLinksUi(externalLinks)
         }
     }

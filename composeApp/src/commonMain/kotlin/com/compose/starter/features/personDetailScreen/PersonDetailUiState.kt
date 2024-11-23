@@ -5,6 +5,10 @@ import com.compose.starter.commonUi.ExternalLink
 import com.compose.starter.networking.ApiState
 import com.compose.starter.networking.model.MappedMovieCredit
 import com.compose.starter.networking.model.MappedTvCredit
+import com.compose.starter.utilities.ImmutableList
+import com.compose.starter.utilities.ImmutableMap
+import com.compose.starter.utilities.immutableList
+import com.compose.starter.utilities.immutableMap
 
 @Immutable
 data class PersonDetailUiState(
@@ -17,8 +21,8 @@ data class PersonDetailUiState(
     val gender: Int? = null,
     val knownFor: String? = null,
     val bio: String? = null,
-    val externalLinks: List<ExternalLink> = emptyList(),
-    val profileImages: List<String> = emptyList(),
-    val movieCredits: Map<String, List<MappedMovieCredit>> = emptyMap(),
-    val tvCredits: Map<String, List<MappedTvCredit>> = emptyMap(),
+    val externalLinks: ImmutableList<ExternalLink> = immutableList(),
+    val profileImages: ImmutableList<String> = immutableList(),
+    val movieCredits: ImmutableMap<String, List<MappedMovieCredit>> = immutableMap(),
+    val tvCredits: ImmutableMap<String, List<MappedTvCredit>> = immutableMap(),
 )

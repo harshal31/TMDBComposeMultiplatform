@@ -22,6 +22,7 @@ import com.compose.starter.constants.ContentDescription
 import com.compose.starter.networking.model.TmdbMediaData
 import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
+import com.compose.starter.utilities.ImmutableList
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.right_arrow
 import org.jetbrains.compose.resources.StringResource
@@ -30,7 +31,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HeaderListValue(
-    values: List<TmdbMediaData>,
+    values: ImmutableList<TmdbMediaData>,
     onItemClick: (String) -> Unit
 ) {
     LazyRow(
@@ -38,7 +39,7 @@ fun HeaderListValue(
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
         items(
-            values,
+            values.items,
             key = { it.mediaId ?: 0 }
         ) {
             OutlinedCard(

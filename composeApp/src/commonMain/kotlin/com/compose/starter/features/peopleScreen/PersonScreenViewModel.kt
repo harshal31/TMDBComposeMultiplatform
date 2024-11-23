@@ -7,6 +7,7 @@ import com.compose.starter.networking.DefaultParameter
 import com.compose.starter.networking.Endpoint
 import com.compose.starter.networking.Parameter
 import com.compose.starter.networking.model.TmdbMediaData
+import com.compose.starter.utilities.immutableList
 import com.compose.starter.utilities.second
 import com.compose.starter.utilities.third
 import kotlinx.coroutines.async
@@ -16,9 +17,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class PeopleScreenViewModel(private val repository: PeopleScreenRepository) : ViewModel() {
+class PersonScreenViewModel(private val repository: PersonScreenRepository) : ViewModel() {
     private var isApiCalled = false
-    private val _uiState = MutableStateFlow(PeopleScreenUiState())
+    private val _uiState = MutableStateFlow(PersonScreenUiState())
     val uiState = _uiState.asStateFlow()
 
 
@@ -61,24 +62,30 @@ class PeopleScreenViewModel(private val repository: PeopleScreenRepository) : Vi
                 _uiState.update { peoples ->
                     peoples.copy(
                         apiState = ApiState.NONE,
-                        dailyTrendedPeople = result.first().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
-                        weeklyTrendingPeople = result.second().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
-                        popularPeople = result.third().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
+                        dailyTrendedPeople = immutableList(
+                            result.first().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
+                        weeklyTrendingPeople = immutableList(
+                            result.second().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
+                        popularPeople = immutableList(
+                            result.third().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
                     )
                 }
                 return@launch
