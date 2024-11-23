@@ -131,7 +131,7 @@ fun MovieDetailInformation(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 mediaDetail?.genres?.let {
-                    items(it, key = { v -> v.id ?: 0 }) { genre ->
+                    items(it.items, key = { v -> v.id ?: 0 }) { genre ->
                         genre.name?.let {
                             SuggestionChip(
                                 modifier = Modifier

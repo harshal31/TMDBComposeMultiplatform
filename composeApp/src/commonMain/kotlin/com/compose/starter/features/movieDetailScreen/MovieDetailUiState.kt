@@ -4,6 +4,8 @@ import androidx.compose.runtime.Immutable
 import com.compose.starter.commonUi.ExternalLink
 import com.compose.starter.networking.ApiState
 import com.compose.starter.networking.model.MappedMovieDetail
+import com.compose.starter.utilities.ImmutableList
+import com.compose.starter.utilities.immutableList
 import org.jetbrains.compose.resources.StringResource
 
 @Immutable
@@ -17,9 +19,9 @@ data class MovieDetailUiState(
     val isFavorite: Boolean = false,
     val shouldAddToWatchList: Boolean = false,
     val rating: Int = 0,
-    val overviewPairs: List<List<OverviewPair>> = emptyList(),
-    val importantCrewMap: List<Pair<String, String>> = emptyList(),
-    val externalLinks: List<ExternalLink> = emptyList(),
+    val overviewPairs: ImmutableList<List<OverviewPair>> = immutableList(),
+    val importantCrewMap: ImmutableList<Pair<String, String>> = immutableList(),
+    val externalLinks: ImmutableList<ExternalLink> = immutableList(),
 )
 
 

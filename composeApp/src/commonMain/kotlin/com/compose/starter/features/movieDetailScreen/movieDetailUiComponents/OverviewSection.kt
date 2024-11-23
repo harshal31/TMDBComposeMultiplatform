@@ -41,6 +41,7 @@ import com.compose.starter.features.movieDetailScreen.OverviewPair
 import com.compose.starter.screenWidth
 import com.compose.starter.spacingsAndBorders.rectBorder
 import com.compose.starter.spacingsAndBorders.spacing
+import com.compose.starter.utilities.ImmutableList
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.cancel
 import composestarter.composeapp.generated.resources.overview
@@ -55,9 +56,9 @@ fun OverviewSection(
     title: String?,
     overview: String,
     posterPath: String?,
-    importantCrewMap: List<Pair<String, String>>,
-    overviewPairs: List<List<OverviewPair>>,
-    externalLinks: List<ExternalLink>,
+    importantCrewMap: ImmutableList<Pair<String, String>>,
+    overviewPairs: ImmutableList<List<OverviewPair>>,
+    externalLinks: ImmutableList<ExternalLink>,
 ) {
     val scope = rememberCoroutineScope()
     var isBottomSheetVisible by rememberSaveable { mutableStateOf(false) }
@@ -150,8 +151,8 @@ fun OverviewSection(
 }
 
 @Composable
-private fun MovieReleaseInfoPair(overviewPairs: List<List<OverviewPair>>) {
-    overviewPairs.forEach { pair ->
+private fun MovieReleaseInfoPair(overviewPairs: ImmutableList<List<OverviewPair>>) {
+    overviewPairs.items.forEach { pair ->
         Row(
             modifier = Modifier.fillMaxWidth()
                 .padding(bottom = MaterialTheme.spacing.small),
@@ -187,7 +188,7 @@ private fun MovieReleaseInfoPair(overviewPairs: List<List<OverviewPair>>) {
 
 
 @Composable
-private fun ImportantMovieCrew(importantCrewMap: List<Pair<String, String>>) {
+private fun ImportantMovieCrew(importantCrewMap: ImmutableList<Pair<String, String>>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -196,7 +197,7 @@ private fun ImportantMovieCrew(importantCrewMap: List<Pair<String, String>>) {
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        importantCrewMap.forEach {
+        importantCrewMap.items.forEach {
             OutlinedCard(
                 modifier = Modifier
                     .width(screenWidth * 0.5f)

@@ -9,6 +9,7 @@ import com.compose.starter.networking.Parameter
 import com.compose.starter.networking.model.TmdbMediaData
 import com.compose.starter.utilities.fifth
 import com.compose.starter.utilities.fourth
+import com.compose.starter.utilities.immutableList
 import com.compose.starter.utilities.second
 import com.compose.starter.utilities.sixth
 import com.compose.starter.utilities.third
@@ -77,42 +78,54 @@ class MoviesScreenViewModel(private val repository: MoviesScreenRepository) : Vi
                 _uiState.update { movies ->
                     movies.copy(
                         errorCode = ApiState.NONE,
-                        dailyTrendedMovies = result.first().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
-                        weeklyTrendingMovies = result.second().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
-                        popularMovies = result.third().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
-                        upcomingMovies = result.fourth().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
-                        nowInTheatres = result.fifth().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
-                        freeToWatchMovies = result.sixth().getOrNull()?.results?.map {
-                            TmdbMediaData(
-                                imageUrl = it.posterPath ?: it.profilePath ?: "",
-                                mediaId = it.id.toString()
-                            )
-                        } ?: emptyList(),
+                        dailyTrendedMovies = immutableList(
+                            result.first().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
+                        weeklyTrendingMovies = immutableList(
+                            result.second().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
+                        popularMovies = immutableList(
+                            result.third().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
+                        upcomingMovies = immutableList(
+                            result.fourth().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
+                        nowInTheatres = immutableList(
+                            result.fifth().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
+                        freeToWatchMovies = immutableList(
+                            result.sixth().getOrNull()?.results?.map {
+                                TmdbMediaData(
+                                    imageUrl = it.posterPath ?: it.profilePath ?: "",
+                                    mediaId = it.id.toString()
+                                )
+                            }
+                        ),
                     )
                 }
                 return@launch

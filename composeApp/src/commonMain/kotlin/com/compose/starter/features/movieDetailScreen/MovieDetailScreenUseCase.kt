@@ -7,6 +7,8 @@ import com.compose.starter.getDisplayLanguage
 import com.compose.starter.networking.ApiState
 import com.compose.starter.networking.ApiState.Companion.mapErrorToApiIssue
 import com.compose.starter.networking.DefaultParameter
+import com.compose.starter.utilities.immutableList
+import com.compose.starter.utilities.immutableMap
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.budget
 import composestarter.composeapp.generated.resources.original_language
@@ -80,10 +82,12 @@ class MovieDetailScreenUseCase(
                         it.value.sortedBy { c -> c.name }.map { c -> c.mapToMappedCrew() }
                     } ?: emptyMap()
 
-                    shareMediaData.updateCastAndCrewData(mediaName = movieDetail.title ?: "",
-                        casts = credit.cast?.map { it.mapToMappedCast() } ?: emptyList(),
-                        crewMap = crewMap,
-                        crewSize = credit.crew?.size ?: 0)
+                    shareMediaData.updateCastAndCrewData(
+                        mediaName = movieDetail.title ?: "",
+                        casts = immutableList(credit.cast?.map { it.mapToMappedCast() }),
+                        crewMap = immutableMap(crewMap),
+                        crewSize = credit.crew?.size ?: 0
+                    )
                 }
 
                 MovieDetailUiState(
@@ -94,11 +98,13 @@ class MovieDetailScreenUseCase(
                     certification = releaseInfo?.first,
                     releaseYear = releaseInfo?.third,
                     accountId = accountId.getOrNull()?.id?.toString(),
-                    overviewPairs = overviewPairs,
-                    importantCrewMap = movieDetail?.credits?.getImportantCastAndCrew()
-                        ?: emptyList(),
-                    externalLinks = movieDetail?.externalIds?.mapToExternalLinks(movieDetail.homepage)
-                        ?: emptyList()
+                    overviewPairs = immutableList(overviewPairs),
+                    importantCrewMap = immutableList(movieDetail?.credits?.getImportantCastAndCrew()),
+                    externalLinks = immutableList(
+                        movieDetail?.externalIds?.mapToExternalLinks(
+                            movieDetail.homepage
+                        )
+                    )
                 )
             }
         }.flatMapLatest { detail ->

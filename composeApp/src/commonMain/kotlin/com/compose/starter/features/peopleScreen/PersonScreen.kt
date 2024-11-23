@@ -22,7 +22,7 @@ import composestarter.composeapp.generated.resources.weekly_trends
 
 @Composable
 fun PersonScreen(
-    viewModel: PeopleScreenViewModel,
+    viewModel: PersonScreenViewModel,
     goToMoreScreen: (String) -> Unit,
     onItemClick: (String) -> Unit,
 ) {

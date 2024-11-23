@@ -15,8 +15,8 @@ import com.compose.starter.features.movieDetailScreen.MovieDetailScreenRepositor
 import com.compose.starter.features.movieDetailScreen.MovieDetailScreenUseCase
 import com.compose.starter.features.moviesScreen.MoviesScreenRepository
 import com.compose.starter.features.moviesScreen.MoviesScreenViewModel
-import com.compose.starter.features.peopleScreen.PeopleScreenRepository
-import com.compose.starter.features.peopleScreen.PeopleScreenViewModel
+import com.compose.starter.features.peopleScreen.PersonScreenRepository
+import com.compose.starter.features.peopleScreen.PersonScreenViewModel
 import com.compose.starter.features.personDetailScreen.PersonDetailRepository
 import com.compose.starter.features.personDetailScreen.PersonDetailUseCase
 import com.compose.starter.features.personDetailScreen.PersonDetailViewModel
@@ -54,7 +54,7 @@ private val repoModules = module {
     factory { MoviesScreenRepository(network = get()) }
     factory { TvSeriesScreenRepository(network = get()) }
     factory { SettingsScreenRepository(network = get(), store = get()) }
-    factory { PeopleScreenRepository(network = get()) }
+    factory { PersonScreenRepository(network = get()) }
     factory {
         MovieDetailScreenRepository(
             network = get(),
@@ -86,7 +86,7 @@ private val viewModelModules = module {
     viewModel { TvSeriesScreenViewModel(repository = get()) }
     viewModel { SettingsScreenViewModel(repository = get()) }
     viewModel { AppLevelViewModel(store = get()) }
-    viewModel { PeopleScreenViewModel(repository = get()) }
+    viewModel { PersonScreenViewModel(repository = get()) }
     viewModel {
         MovieDetailScreenModel(
             movieDetailUseCase = get(),
