@@ -15,12 +15,13 @@ import com.compose.starter.networking.model.MappedRecommended
 import com.compose.starter.networking.model.MappedSimilar
 import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
+import com.compose.starter.utilities.ImmutableList
 
 
 @Composable
 fun RecommendedLazyRow(
     modifier: Modifier,
-    recommendations: List<MappedRecommended>
+    recommendations: ImmutableList<MappedRecommended>
 ) {
     LazyRow(
         modifier = Modifier
@@ -29,7 +30,7 @@ fun RecommendedLazyRow(
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
         items(
-            recommendations,
+            recommendations.items,
             key = { it.id ?: 0 }
         ) {
             OutlinedCard(
@@ -54,7 +55,7 @@ fun RecommendedLazyRow(
 @Composable
 fun SimilarLazyRow(
     modifier: Modifier,
-    similars: List<MappedSimilar>
+    similars: ImmutableList<MappedSimilar>
 ) {
     LazyRow(
         modifier = Modifier
@@ -63,7 +64,7 @@ fun SimilarLazyRow(
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
         items(
-            similars,
+            similars.items,
             key = { it.id ?: 0 }
         ) {
             OutlinedCard(

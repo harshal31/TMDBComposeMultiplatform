@@ -5,8 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
-import com.compose.starter.features.peopleScreen.PeopleScreenViewModel
 import com.compose.starter.features.peopleScreen.PersonScreen
+import com.compose.starter.features.peopleScreen.PersonScreenViewModel
 import com.compose.starter.features.personDetailScreen.PersonDetailScreen
 import com.compose.starter.features.personDetailScreen.PersonDetailViewModel
 import kotlinx.serialization.Serializable
@@ -15,7 +15,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun NavGraphBuilder.personsGraph(navController: NavController) {
     navigation<Person.Graph>(startDestination = Person.Persons) {
         composable<Person.Persons> {
-            val viewModel = koinViewModel<PeopleScreenViewModel>()
+            val viewModel = koinViewModel<PersonScreenViewModel>()
             PersonScreen(
                 viewModel = viewModel,
                 goToMoreScreen = {},

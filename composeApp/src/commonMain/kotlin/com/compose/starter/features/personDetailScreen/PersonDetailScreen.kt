@@ -8,11 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -26,25 +23,22 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.compose.starter.commonUi.CircleIcon
 import com.compose.starter.commonUi.CleanContent
-import com.compose.starter.commonUi.CoilCropSizeImage
 import com.compose.starter.features.personDetailScreen.personDetailUiComponents.AboutPersonInformation
 import com.compose.starter.features.personDetailScreen.personDetailUiComponents.MoviesBottomSheet
+import com.compose.starter.features.personDetailScreen.personDetailUiComponents.PersonAvatarImage
 import com.compose.starter.features.personDetailScreen.personDetailUiComponents.PersonDetailChoiceButtons
 import com.compose.starter.features.personDetailScreen.personDetailUiComponents.PersonInformation
 import com.compose.starter.features.personDetailScreen.personDetailUiComponents.ProfileSection
 import com.compose.starter.features.personDetailScreen.personDetailUiComponents.SingleChoiceClick
 import com.compose.starter.features.personDetailScreen.personDetailUiComponents.TvSeriesBottomSheet
-import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
 import com.compose.starter.utilities.hideBottomSheet
 import com.compose.starter.utilities.showBottomSheet
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.arrow_back
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -169,36 +163,6 @@ fun PersonDetailScreen(
                         isTvSeriesBottomSheetVisible = it
                     }
                 }
-            )
-        }
-    }
-}
-
-@Composable
-@Preview
-private fun PersonAvatarImage(
-    avatarPath: String?,
-    personName: String?
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        ElevatedCard(
-            elevation = CardDefaults.elevatedCardElevation(
-                defaultElevation = MaterialTheme.sizing.twelve,
-                focusedElevation = MaterialTheme.sizing.twelve,
-            ), modifier = Modifier.size(
-                width = MaterialTheme.sizing.twoHundred,
-                height = MaterialTheme.sizing.threeHundred
-            )
-        ) {
-            CoilCropSizeImage(
-                modifier = Modifier.fillMaxSize(),
-                url = avatarPath ?: "",
-                contentScale = ContentScale.FillHeight,
-                contentDescription = personName ?: ""
             )
         }
     }

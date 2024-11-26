@@ -108,7 +108,8 @@ fun MovieDetailScreen(
                         OverviewSection(
                             modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
                             title = uiState.movieDetail?.title,
-                            overview = uiState.movieDetail?.overview ?: stringResource(Res.string.overview_not_present),
+                            overview = uiState.movieDetail?.overview
+                                ?: stringResource(Res.string.overview_not_present),
                             posterPath = uiState.movieDetail?.backdropPath,
                             importantCrewMap = uiState.importantCrewMap,
                             overviewPairs = uiState.overviewPairs,
@@ -116,7 +117,10 @@ fun MovieDetailScreen(
                         )
                     }
 
-                    if (uiState.movieDetail?.videos.isNullOrEmpty().not() || uiState.movieDetail?.images.isNullOrEmpty().not() || uiState.movieDetail?.backdrops.isNullOrEmpty().not()) {
+                    if (uiState.movieDetail?.videos?.items.isNullOrEmpty()
+                            .not() || uiState.movieDetail?.images?.items.isNullOrEmpty()
+                            .not() || uiState.movieDetail?.backdrops?.items.isNullOrEmpty().not()
+                    ) {
                         item {
                             Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                         }
@@ -133,7 +137,7 @@ fun MovieDetailScreen(
                         }
                     }
 
-                    if ((uiState.movieDetail?.casts ?: emptyList()).isNotEmpty()) {
+                    if (uiState.movieDetail?.casts?.items.isNullOrEmpty().not()) {
                         item {
                             Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                         }
@@ -152,13 +156,13 @@ fun MovieDetailScreen(
                         item {
                             FeaturedCastRow(
                                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
-                                casts = uiState.movieDetail?.casts ?: emptyList(),
+                                casts = uiState.movieDetail?.casts!!,
                                 navigateToDetail = navigate
                             )
                         }
                     }
 
-                    if ((uiState.movieDetail?.reviews ?: emptyList()).isNotEmpty()) {
+                    if (uiState.movieDetail?.reviews?.items.isNullOrEmpty().not()) {
                         item {
                             Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                         }
@@ -176,12 +180,12 @@ fun MovieDetailScreen(
                         ) {
                             ReviewCard(
                                 modifier = Modifier.padding(horizontal = MaterialTheme.spacing.default),
-                                review = uiState.movieDetail?.reviews?.first()!!
+                                review = uiState.movieDetail?.reviews?.items?.first()!!
                             )
                         }
                     }
 
-                    if ((uiState.movieDetail?.recommendations ?: emptyList()).isNotEmpty()) {
+                    if (uiState.movieDetail?.recommendations?.items.isNullOrEmpty().not()) {
                         item {
                             Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                         }
@@ -202,7 +206,7 @@ fun MovieDetailScreen(
                     }
 
 
-                    if ((uiState.movieDetail?.similarList ?: emptyList()).isNotEmpty()) {
+                    if (uiState.movieDetail?.similarList?.items.isNullOrEmpty().not()) {
                         item {
                             Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                         }
@@ -222,7 +226,7 @@ fun MovieDetailScreen(
                         }
                     }
 
-                    if ((uiState.movieDetail?.keywords ?: emptyList()).isNotEmpty()) {
+                    if (uiState.movieDetail?.keywords?.items.isNullOrEmpty().not()) {
                         item {
                             Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                         }

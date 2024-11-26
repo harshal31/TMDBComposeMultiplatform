@@ -3,6 +3,10 @@ package com.compose.starter.di
 import androidx.compose.runtime.Immutable
 import com.compose.starter.networking.model.MappedCast
 import com.compose.starter.networking.model.MappedCrew
+import com.compose.starter.utilities.ImmutableList
+import com.compose.starter.utilities.ImmutableMap
+import com.compose.starter.utilities.immutableList
+import com.compose.starter.utilities.immutableMap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -15,8 +19,8 @@ class ShareMediaData {
 
     fun updateCastAndCrewData(
         mediaName: String,
-        casts: List<MappedCast>,
-        crewMap: Map<String, List<MappedCrew>>,
+        casts: ImmutableList<MappedCast>,
+        crewMap: ImmutableMap<String, List<MappedCrew>>,
         crewSize: Int,
     ) {
         movieState.update {
@@ -34,7 +38,7 @@ class ShareMediaData {
 @Immutable
 data class MediaDetailUiState(
     val mediaName: String = "",
-    val casts: List<MappedCast> = emptyList(),
-    val crews: Map<String, List<MappedCrew>> = emptyMap(),
+    val casts: ImmutableList<MappedCast> = immutableList(),
+    val crews: ImmutableMap<String, List<MappedCrew>> = immutableMap(),
     val crewSize: Int = 0,
 )

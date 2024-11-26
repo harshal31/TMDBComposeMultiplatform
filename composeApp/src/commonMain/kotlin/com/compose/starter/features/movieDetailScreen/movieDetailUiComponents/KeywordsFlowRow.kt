@@ -14,19 +14,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.compose.starter.networking.model.MappedKeyword
 import com.compose.starter.spacingsAndBorders.spacing
+import com.compose.starter.utilities.ImmutableList
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun KeywordsFlowRow(
     modifier: Modifier,
-    keywords: List<MappedKeyword>
+    keywords: ImmutableList<MappedKeyword>
 ) {
     FlowRow(
         modifier = Modifier
             .fillMaxWidth()
             .then(modifier),
     ) {
-        keywords.forEach {
+        keywords.items.forEach {
             key(it.id) {
                 SuggestionChip(
                     modifier = Modifier
