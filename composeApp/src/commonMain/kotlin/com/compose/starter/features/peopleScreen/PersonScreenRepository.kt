@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
 
-class PeopleScreenRepository(
+class PersonScreenRepository(
     network: NetworkManager,
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {

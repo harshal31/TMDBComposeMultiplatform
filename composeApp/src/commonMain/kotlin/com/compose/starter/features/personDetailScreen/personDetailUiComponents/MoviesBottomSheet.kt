@@ -1,6 +1,5 @@
 package com.compose.starter.features.personDetailScreen.personDetailUiComponents
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,17 +32,18 @@ import com.compose.starter.constants.ContentDescription
 import com.compose.starter.networking.model.MappedMovieCredit
 import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
+import com.compose.starter.utilities.ImmutableMap
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.as_character
 import composestarter.composeapp.generated.resources.movies
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoviesBottomSheet(
     sheetState: SheetState,
     isBottomSheetVisible: Boolean,
-    movieCredits: Map<String, List<MappedMovieCredit>>,
+    movieCredits: ImmutableMap<String, List<MappedMovieCredit>>,
     navigateToMovieRole: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -85,7 +85,7 @@ fun MoviesBottomSheet(
                     .wrapContentHeight()
             ) {
                 item {
-                    movieCredits.keys.forEach { key ->
+                    movieCredits.map.keys.forEach { key ->
                         key(key) {
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
@@ -99,7 +99,7 @@ fun MoviesBottomSheet(
                                 )
 
                                 MoviesTitleWithCharacter(
-                                    movies = movieCredits[key] ?: emptyList(),
+                                    movies = movieCredits.map[key] ?: emptyList(),
                                     navigateToMovieRole
                                 )
                             }

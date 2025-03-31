@@ -56,7 +56,7 @@ fun CastAndCrewListScreen(
     val typography = MaterialTheme.typography
     val uiState by shareMediaData.movieState.collectAsStateWithLifecycle()
     val gridCells = 3
-    val totalCols = remember { uiState.casts.chunked(gridCells).size }
+    val totalCols = remember { uiState.casts.items.chunked(gridCells).size }
     val gridItemSize = MaterialTheme.sizing.twoFifty
     val spaceBetween = MaterialTheme.spacing.small
     val verticalGridHeight =
@@ -66,8 +66,8 @@ fun CastAndCrewListScreen(
 
     val castTitle = pluralResource(
         res = Res.string.cast to Res.plurals.cast,
-        quantity = uiState.casts.size,
-        formatArgs = arrayOf(uiState.casts.size)
+        quantity = uiState.casts.items.size,
+        formatArgs = arrayOf(uiState.casts.items.size)
     )
 
     val crewTitle = pluralResource(
@@ -124,7 +124,7 @@ fun CastAndCrewListScreen(
                     verticalArrangement = Arrangement.spacedBy(spaceBetween),
                     content = {
                         items(
-                            uiState.casts,
+                            uiState.casts.items,
                             key = { it.id ?: "" }
                         ) {
                             CastItem(
@@ -155,7 +155,7 @@ fun CastAndCrewListScreen(
                 )
             }
 
-            uiState.crews.forEach { (title, values) ->
+            uiState.crews.map.forEach { (title, values) ->
                 val crewChunked = values.chunked(gridCells).size
                 val crewVerticalGridHeight =
                     (gridItemSize.times(crewChunked)) + (spaceBetween.times(crewChunked))

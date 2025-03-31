@@ -3,6 +3,8 @@ package com.compose.starter.features.personDetailScreen
 import com.compose.starter.networking.ApiState
 import com.compose.starter.networking.ApiState.Companion.mapErrorToApiIssue
 import com.compose.starter.networking.DefaultParameter
+import com.compose.starter.utilities.immutableList
+import com.compose.starter.utilities.immutableMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -38,10 +40,10 @@ class PersonDetailUseCase(
                         bornOn = it.bornOn,
                         gender = it.gender?.toInt(),
                         birthPlace = it.birthPlace,
-                        externalLinks = it.externalLinks,
-                        profileImages = it.profileImages,
-                        movieCredits = it.movieCredits,
-                        tvCredits = it.tvCredits,
+                        externalLinks = immutableList(it.externalLinks),
+                        profileImages = immutableList(it.profileImages),
+                        movieCredits = immutableMap(it.movieCredits),
+                        tvCredits = immutableMap(it.tvCredits),
                     )
                 } ?: PersonDetailUiState(
                     apiState = ApiState.ERROR

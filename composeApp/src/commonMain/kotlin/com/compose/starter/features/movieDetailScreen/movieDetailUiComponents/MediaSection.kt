@@ -46,6 +46,7 @@ import com.compose.starter.networking.model.MappedVideo
 import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
 import com.compose.starter.theme.mediaDetailFillColor
+import com.compose.starter.utilities.ImmutableList
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.backdrops
 import composestarter.composeapp.generated.resources.media
@@ -58,21 +59,21 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun MediaSection(
     modifier: Modifier,
-    videos: List<MappedVideo>?,
-    posters: List<MappedImagePoster>?,
-    backdrops: List<MappedBackdrops>?,
+    videos: ImmutableList<MappedVideo>?,
+    posters: ImmutableList<MappedImagePoster>?,
+    backdrops: ImmutableList<MappedBackdrops>?,
     onTabItemDataClick: (TabItemDataClick) -> Unit,
 ) {
     val tabs = listOf(
-        if (videos.isNullOrEmpty().not()) TabItem(
+        if (videos?.items.isNullOrEmpty().not()) TabItem(
             title = Res.string.videos,
             pos = 0
         ) else null,
-        if (posters.isNullOrEmpty().not()) TabItem(
+        if (posters?.items.isNullOrEmpty().not()) TabItem(
             title = Res.string.posters,
             pos = 1
         ) else null,
-        if (backdrops.isNullOrEmpty().not()) TabItem(
+        if (backdrops?.items.isNullOrEmpty().not()) TabItem(
             title = Res.string.backdrops,
             pos = 2
         ) else null,
@@ -105,21 +106,21 @@ fun MediaSection(
                     0 -> onTabItemDataClick(
                         TabItemDataClick.TabVideos(
                             clickItemPos = pos,
-                            videos = videos ?: emptyList()
+                            videos = videos
                         )
                     )
 
                     1 -> onTabItemDataClick(
                         TabItemDataClick.TabPosters(
                             clickItemPos = pos,
-                            posters = posters ?: emptyList()
+                            posters = posters
                         )
                     )
 
                     2 -> onTabItemDataClick(
                         TabItemDataClick.TabBackdrops(
                             clickItemPos = pos,
-                            backdrops = backdrops ?: emptyList()
+                            backdrops = backdrops
                         )
                     )
 
@@ -160,9 +161,9 @@ fun MediaSection(
                 .padding(top = MaterialTheme.spacing.small)
         ) {
             when (tabs[currentTabIndex].pos) {
-                0 -> MediaVideos(videos ?: emptyList())
-                1 -> MediaPosters(posters ?: emptyList())
-                2 -> MediaBackdrops(backdrops ?: emptyList())
+                0 -> MediaVideos(videos)
+                1 -> MediaPosters(posters)
+                2 -> MediaBackdrops(backdrops)
                 else -> {}
             }
         }
@@ -170,7 +171,7 @@ fun MediaSection(
 }
 
 @Composable
-private fun MediaVideos(results: List<MappedVideo>) {
+private fun MediaVideos(results: ImmutableList<MappedVideo>?) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -178,7 +179,7 @@ private fun MediaVideos(results: List<MappedVideo>) {
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
-        results.take(9).forEach {
+        results?.items?.take(9)?.forEach {
             key(it.key) {
                 Column(modifier = Modifier.fillMaxHeight()) {
                     Box(
@@ -227,14 +228,14 @@ private fun MediaVideos(results: List<MappedVideo>) {
 }
 
 @Composable
-private fun MediaPosters(posters: List<MappedImagePoster>) {
+private fun MediaPosters(posters: ImmutableList<MappedImagePoster>?) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
-        posters.take(9).forEach {
+        posters?.items?.take(9)?.forEach {
             key(it.filePath) {
                 OutlinedCard(
                     modifier = Modifier
@@ -256,14 +257,14 @@ private fun MediaPosters(posters: List<MappedImagePoster>) {
 }
 
 @Composable
-private fun MediaBackdrops(backdrops: List<MappedBackdrops>) {
+private fun MediaBackdrops(backdrops: ImmutableList<MappedBackdrops>?) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
-        backdrops.take(9).forEach {
+        backdrops?.items?.take(9)?.forEach {
             key(it.filePath) {
                 OutlinedCard(
                     modifier = Modifier
@@ -287,19 +288,19 @@ private fun MediaBackdrops(backdrops: List<MappedBackdrops>) {
 sealed interface TabItemDataClick {
     data class TabVideos(
         val clickItemPos: Int,
-        val videos: List<MappedVideo>,
+        val videos: ImmutableList<MappedVideo>?,
         val type: String = "Videos",
     ) : TabItemDataClick
 
     data class TabPosters(
         val clickItemPos: Int,
-        val posters: List<MappedImagePoster>,
+        val posters: ImmutableList<MappedImagePoster>?,
         val type: String = "Posters",
     ) : TabItemDataClick
 
     data class TabBackdrops(
         val clickItemPos: Int,
-        val backdrops: List<MappedBackdrops>,
+        val backdrops: ImmutableList<MappedBackdrops>?,
         val type: String = "Backdrops",
     ) : TabItemDataClick
 }

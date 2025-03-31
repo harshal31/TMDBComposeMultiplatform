@@ -17,12 +17,13 @@ import androidx.compose.ui.text.font.FontWeight
 import com.compose.starter.commonUi.CoilCropSizeImage
 import com.compose.starter.spacingsAndBorders.sizing
 import com.compose.starter.spacingsAndBorders.spacing
+import com.compose.starter.utilities.ImmutableList
 import composestarter.composeapp.generated.resources.Res
 import composestarter.composeapp.generated.resources.profiles
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ProfileSection(profiles: List<String>) {
+fun ProfileSection(profiles: ImmutableList<String>) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
@@ -42,7 +43,7 @@ fun ProfileSection(profiles: List<String>) {
                 .height(MaterialTheme.sizing.oneSeventy),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
         ) {
-            items(profiles, key = { it }) {
+            items(profiles.items, key = { it }) {
                 OutlinedCard(
                     onClick = {
 
