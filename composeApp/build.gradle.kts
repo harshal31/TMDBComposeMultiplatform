@@ -29,14 +29,6 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
         }
-
-        iosTarget.compilations {
-            val main by getting {
-                cinterops {
-                    create("StatusBar")
-                }
-            }
-        }
     }
 
     sourceSets {
@@ -53,6 +45,8 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
+
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -126,12 +120,5 @@ android {
     }
     dependencies {
         debugImplementation(compose.uiTooling)
-    }
-}
-
-swiftklib {
-    create("StatusBar") {
-        path = file("../iosApp/iosApp/statusBar")
-        packageName("com.compose.starter.statusBar")
     }
 }
